@@ -228,7 +228,7 @@ options:
         TLS_RSA_WITH_AES_128_CBC_SHA. For example,
         `Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TLS_RSA_WITH_AES_128_CBC_SHA256`:`false`.
         The default value is `true` for them.
-    type: object
+    type: dict
   certificates:
     description:
       - >-
@@ -567,7 +567,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                 )
             ),
             custom_properties=dict(
-                type='object',
+                type='dict',
                 disposition='/properties/customProperties'
             ),
             certificates=dict(
