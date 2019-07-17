@@ -297,12 +297,10 @@ options:
     description:
       - Publisher email.
     type: str
-    required: true
   publisher_name:
     description:
       - Publisher name.
     type: str
-    required: true
   public_ip_addresses:
     description:
       - >-
@@ -320,7 +318,6 @@ options:
     description:
       - Name of the Sku.
     type: str
-    required: true
   sku_capacity:
     description:
       - Capacity of the SKU (number of deployed units of the SKU).
@@ -624,13 +621,11 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
             ),
             publisher_email=dict(
                 type='str',
-                disposition='/properties/publisherEmail',
-                required=True
+                disposition='/properties/publisherEmail'
             ),
             publisher_name=dict(
                 type='str',
-                disposition='/properties/publisherName',
-                required=True
+                disposition='/properties/publisherName'
             ),
             public_ip_addresses=dict(
                 type='list',
@@ -647,8 +642,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                          'Standard',
                          'Premium',
                          'Basic',
-                         'Consumption'],
-                required=True
+                         'Consumption']
             ),
             sku_capacity=dict(
                 type='int',
