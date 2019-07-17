@@ -258,55 +258,6 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateApiUsingOai3Import
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    path: petstore
-    value: >-
-      https://raw.githubusercontent.com/OAI/OpenAPI-Specification/master/examples/v3.0/petstore.yaml
-    format: openapi-link
-- name: ApiManagementCreateApiUsingSwaggerImport
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    path: petstore
-    value: 'http://petstore.swagger.io/v2/swagger.json'
-    format: swagger-link-json
-- name: ApiManagementCreateApiUsingWadlImport
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    path: collector
-    value: >-
-      https://developer.cisco.com/media/wae-release-6-2-api-reference/wae-collector-rest-api/application.wadl
-    format: wadl-link-json
-- name: ApiManagementCreateSoapToRestApiUsingWsdlImport
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    path: currency
-    value: 'http://www.webservicex.net/CurrencyConvertor.asmx?WSDL'
-    format: wsdl-link
-    wsdl_selector:
-      wsdl_service_name: CurrencyConvertor
-      wsdl_endpoint_name: CurrencyConvertorSoap
-- name: ApiManagementCreateSoapPassThroughApiUsingWsdlImport
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    path: currency
-    value: 'http://www.webservicex.net/CurrencyConvertor.asmx?WSDL'
-    format: wsdl-link
-    wsdl_selector:
-      wsdl_service_name: CurrencyConvertor
-      wsdl_endpoint_name: CurrencyConvertorSoap
-    api_type: soap
 - name: ApiManagementCreateApi
   azure_rm_apimanagementapi:
     resource_group: myResourceGroup
@@ -326,84 +277,6 @@ EXAMPLES = '''
     protocols:
       - https
       - http
-- name: ApiManagementCreateApiRevisionFromExistingApi
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    api_revision_description: Creating a Revision of an existing API
-    source_api_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
-      api_name }}
-    service_url: 'http://echoapi.cloudapp.net/apiv3'
-    path: echo
-- name: ApiManagementCreateApiNewVersionUsingExistingApi
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    description: >-
-      Create Echo API into a new Version using Existing Version Set and Copy all
-      Operations.
-    api_version: v4
-    is_current: true
-    api_version_set_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.ApiManagement/service/{{ service_name
-      }}/apiVersionSets/{{ api_version_set_name }}
-    subscription_required: true
-    source_api_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
-      api_name }}
-    display_name: Echo API2
-    service_url: 'http://echoapi.cloudapp.net/api'
-    path: echo2
-    protocols:
-      - http
-      - https
-- name: ApiManagementCreateApiClone
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    description: Copy of Existing Echo Api including Operations.
-    is_current: true
-    subscription_required: true
-    source_api_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
-      api_name }}
-    display_name: Echo API2
-    service_url: 'http://echoapi.cloudapp.net/api'
-    path: echo2
-    protocols:
-      - http
-      - https
-- name: ApiManagementCreateApiWithOpenIdConnect
-  azure_rm_apimanagementapi:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    description: >-
-      This is a sample server Petstore server.  You can find out more about
-      Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net,
-      #swagger](http://swagger.io/irc/).  For this sample, you can use the api
-      key `special-key` to test the authorization filters.
-    authentication_settings:
-      openid:
-        openid_provider_id: testopenid
-        bearer_token_sending_methods:
-          - authorizationHeader
-    subscription_key_parameter_names:
-      header: Ocp-Apim-Subscription-Key
-      query: subscription-key
-    display_name: Swagger Petstore
-    service_url: 'http://petstore.swagger.io/v2'
-    path: petstore
-    protocols:
-      - https
 - name: ApiManagementUpdateApi
   azure_rm_apimanagementapi:
     resource_group: myResourceGroup
@@ -694,8 +567,6 @@ class AzureRMApi(AzureRMModuleBaseExt):
         self.mgmt_client = self.get_mgmt_svc_client(GenericRestClient,
                                                     base_url=self._cloud_environment.endpoints.resource_manager)
 
-        resource_group = self.get_resource_group(self.resource_group)
-
         self.url = ('/subscriptions' +
                     '/{{ subscription_id }}' +
                     '/resourceGroups' +
@@ -728,6 +599,8 @@ class AzureRMApi(AzureRMModuleBaseExt):
             else:
                 modifiers = {}
                 self.create_compare_modifiers(self.module_arg_spec, '', modifiers)
+                self.results['modifiers'] = modifiers
+                self.results['compare'] = []
                 if not self.default_compare(modifiers, self.body, old_response, '', self.results):
                     self.to_do = Actions.Update
 

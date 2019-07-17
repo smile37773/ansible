@@ -152,7 +152,7 @@ options:
           capacity:
             description:
               - Capacity of the SKU (number of deployed units of the SKU).
-            type: number
+            type: int
       virtual_network_configuration:
         description:
           - Virtual network configuration for the location.
@@ -323,7 +323,7 @@ options:
   sku_capacity:
     description:
       - Capacity of the SKU (number of deployed units of the SKU).
-    type: number
+    type: int
   identity:
     description:
       - Managed service identity of the Api Management service.
@@ -372,85 +372,10 @@ EXAMPLES = '''
   azure_rm_apimanagementservice:
     resource_group: myResourceGroup
     name: myService
-    tags:
-      tag1: value1
-      tag2: value2
-      tag3: value3
     publisher_email: apim@autorestsdk.com
     publisher_name: autorestsdk
     sku_name: Developer
-    sku_capacity: '1'
-    location: Central US
-- name: ApiManagementCreateMultiRegionServiceWithCustomHostname
-  azure_rm_apimanagementservice:
-    resource_group: myResourceGroup
-    name: myService
-    hostname_configurations:
-      - type: Proxy
-        host_name: proxyhostname1.contoso.com
-        encoded_certificate: '************Base 64 Encoded Pfx Certificate******************'
-        certificate_password: '**************Password of the Certificate*******************'
-      - type: Proxy
-        host_name: proxyhostname2.contoso.com
-        encoded_certificate: '************Base 64 Encoded Pfx Certificate******************'
-        certificate_password: '**************Password of the Certificate*******************'
-        negotiate_client_certificate: true
-      - type: Portal
-        host_name: portalhostname1.contoso.com
-        encoded_certificate: '************Base 64 Encoded Pfx Certificate******************'
-        certificate_password: '**************Password of the Certificate*******************'
-    virtual_network_configuration:
-      subnet_resource_id: >-
-        /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-        }}/providers/Microsoft.Network/virtualNetworks/{{ virtual_network_name
-        }}/subnets/{{ subnet_name }}
-    additional_locations:
-      - location: North Europe
-        sku:
-          name: Premium
-          capacity: '1'
-        virtual_network_configuration:
-          subnet_resource_id: >-
-            /subscriptions/{{ subscription_id }}/resourceGroups/{{
-            resource_group }}/providers/Microsoft.Network/virtualNetworks/{{
-            virtual_network_name }}/subnets/{{ subnet_name }}
-    virtual_network_type: External
-    publisher_email: admin@live.com
-    publisher_name: contoso
-    sku_name: Premium
-    sku_capacity: '1'
-    location: Central US
-- name: ApiManagementCreateServiceHavingMsi
-  azure_rm_apimanagementservice:
-    resource_group: myResourceGroup
-    name: myService
-    tags:
-      tag1: value1
-      tag2: value2
-      tag3: value3
-    publisher_email: apim@autorestsdk.com
-    publisher_name: autorestsdk
-    sku_name: Consumption
-    identity:
-      type: SystemAssigned
-    location: West US
-- name: ApiManagementCreateServiceWithSystemCertificates
-  azure_rm_apimanagementservice:
-    resource_group: myResourceGroup
-    name: myService
-    tags:
-      tag1: value1
-      tag2: value2
-      tag3: value3
-    certificates:
-      - encoded_certificate: '*******Base64 encoded Certificate******************'
-        certificate_password: Password
-        store_name: CertificateAuthority
-    publisher_email: apim@autorestsdk.com
-    publisher_name: autorestsdk
-    sku_name: Basic
-    sku_capacity: '1'
-    location: Central US
+    sku_capacity: 1
 - name: ApiManagementUpdateServiceDisableTls10
   azure_rm_apimanagementservice:
     resource_group: myResourceGroup
@@ -617,7 +542,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                                 required=True
                             ),
                             capacity=dict(
-                                type='number'
+                                type='int'
                             )
                         )
                     ),
@@ -626,7 +551,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                         disposition='virtualNetworkConfiguration',
                         options=dict(
                             subnet_resource_id=dict(
-                                type='raw',
+                                type='str',
                                 disposition='subnetResourceId',
                                 pattern=('//subscriptions/{{ subscription_id }}'
                                          '/resourceGroups/{{ resource_group }}/providers'
@@ -731,7 +656,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                 required=True
             ),
             sku_capacity=dict(
-                type='number',
+                type='int',
                 disposition='/sku/capacity'
             ),
             identity=dict(
@@ -742,21 +667,15 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                         type='str',
                         required=True
                     ),
-                    principal_id=ype=dict(
+                    principal_id=dict(
                         type='str',
                         disposition='principalId'
                     ),
-                    tenant_id=principal_id=ype=dict(
+                    tenant_id=dict(
                         type='str',
                         disposition='tenantId'
                     )
                 )
-            ),
-            location=dict(
-                type='str',
-                updatable=False,
-                disposition='/',
-                required=True
             ),
             state=dict(
                 type='str',
@@ -834,6 +753,8 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
             else:
                 modifiers = {}
                 self.create_compare_modifiers(self.module_arg_spec, '', modifiers)
+                self.results['modifiers'] = modifiers
+                self.results['compare'] = []
                 if not self.default_compare(modifiers, self.body, old_response, '', self.results):
                     self.to_do = Actions.Update
 
