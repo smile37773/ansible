@@ -264,10 +264,6 @@ EXAMPLES = '''
     service_name: myService
     api_id: myApi
     description: apidescription5200
-    authentication_settings:
-      o_auth2:
-        authorization_server_id: authorizationServerId2283
-        scope: oauth2scope2580
     subscription_key_parameter_names:
       header: header4520
       query: query3037

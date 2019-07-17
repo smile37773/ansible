@@ -29,6 +29,7 @@ options:
   name:
     description:
       - Resource name.
+    required: true
     type: str
   notification_sender_email:
     description:
@@ -344,11 +345,6 @@ options:
         description:
           - The client tenant id of the identity.
         type: str
-  location:
-    description:
-      - Resource location.
-    type: str
-    required: true
   state:
     description:
       - Assert the state of the ApiManagementService.
@@ -375,7 +371,6 @@ EXAMPLES = '''
     publisher_email: apim@autorestsdk.com
     publisher_name: autorestsdk
     sku_name: Developer
-    sku_capacity: 1
 - name: ApiManagementUpdateServiceDisableTls10
   azure_rm_apimanagementservice:
     resource_group: myResourceGroup
