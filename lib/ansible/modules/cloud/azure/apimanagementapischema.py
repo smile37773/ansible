@@ -272,7 +272,7 @@ class AzureRMApiSchema(AzureRMModuleBaseExt):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.api_name)
+        self.url = self.url.replace('{{ api_name }}', self.api_id)
         self.url = self.url.replace('{{ schema_name }}', self.schema_id)
 
         old_response = self.get_resource()
