@@ -265,7 +265,7 @@ class AzureRMGroupUser(AzureRMModuleBaseExt):
                     display_name=dict(
                         type='str',
                         disposition='displayName',
-                        required=true
+                        required=True
                     ),
                     description=dict(
                         type='str'
