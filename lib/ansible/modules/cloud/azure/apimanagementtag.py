@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementtag
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure Tag instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure Tag.'
 options:
   resource_group:
     description:
@@ -31,30 +31,22 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  tag_id:
     description:
       - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+        Tag identifier. Must be unique in the current API Management service
+        instance.
     required: true
     type: str
-  description:
+  display_name:
     description:
-      - Cache description
-    type: str
-  connection_string:
-    description:
-      - Runtime connection string to cache
+      - Tag name.
     required: true
-    type: str
-  resource_id:
-    description:
-      - Original uri of entity in external system cache points to
     type: str
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the Tag.
+      - Use C(present) to create or update an Tag and C(absent) to delete it.
     default: present
     choices:
       - absent
@@ -67,21 +59,23 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreateTag
+  azure.rm.apimanagementtag:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    tag_id: myTag
+    display_name: tag1
+- name: ApiManagementUpdateTag
+  azure.rm.apimanagementtag:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    tag_id: myTag
+    display_name: temp tag
+- name: ApiManagementDeleteTag
+  azure.rm.apimanagementtag:
+    resource_group: myResourceGroup
+    service_name: myService
+    tag_id: myTag
     state: absent
 
 '''
@@ -107,26 +101,14 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - Tag entity contract properties.
   returned: always
   type: dict
   sample: null
   contains:
-    description:
+    display_name:
       description:
-        - Cache description
-      returned: always
-      type: str
-      sample: null
-    connection_string:
-      description:
-        - Runtime connection string to cache
-      returned: always
-      type: str
-      sample: null
-    resource_id:
-      description:
-        - Original uri of entity in external system cache points to
+        - Tag name.
       returned: always
       type: str
       sample: null
@@ -150,7 +132,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMTag(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -165,26 +147,16 @@ class AzureRMCache(AzureRMModuleBaseExt):
                 disposition='serviceName',
                 required=True
             ),
-            cache_id=dict(
+            tag_id=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
+                disposition='tagId',
                 required=True
             ),
-            description=dict(
+            display_name=dict(
                 type='str',
-                disposition='/properties/*'
-            ),
-            connection_string=dict(
-                type='str',
-                disposition='/properties/connectionString',
+                disposition='/properties/displayName',
                 required=True
-            ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
             ),
             state=dict(
                 type='str',
@@ -195,7 +167,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.tag_id = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +182,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMTag, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                         supports_check_mode=True,
+                                         supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +211,24 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/tags' +
+                    '/{{ tag_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ tag_name }}', self.tag_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("Tag instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('Tag instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +242,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the Tag instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +256,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('Tag instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +269,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('Tag instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +282,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the Tag instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +294,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the Tag instance.')
+            self.fail('Error creating the Tag instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +306,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the Tag instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +317,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the Tag instance.')
+            self.fail('Error deleting the Tag instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the Tag instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +336,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("Tag instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the Tag instance.')
         if found is True:
             return response
 
@@ -374,7 +346,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMTag()
 
 
 if __name__ == '__main__':

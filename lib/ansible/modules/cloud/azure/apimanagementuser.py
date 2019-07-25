@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementuser
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure User instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure User.'
 options:
   resource_group:
     description:
@@ -31,34 +31,103 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  user_id:
     description:
       - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+        User identifier. Must be unique in the current API Management service
+        instance.
     required: true
-    type: str
-  description:
-    description:
-      - Cache description
-    type: str
-  connection_string:
-    description:
-      - Runtime connection string to cache
-    required: true
-    type: str
-  resource_id:
-    description:
-      - Original uri of entity in external system cache points to
     type: str
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the User.
+      - Use C(present) to create or update an User and C(absent) to delete it.
     default: present
     choices:
       - absent
       - present
+  note:
+    description:
+      - Optional note about a user set by the administrator.
+    type: str
+  identities:
+    description:
+      - Collection of user identities.
+    type: list
+    suboptions:
+      provider:
+        description:
+          - Identity provider name.
+        type: str
+      id:
+        description:
+          - Identifier value within provider.
+        type: str
+  email:
+    description:
+      - >-
+        Email address. Must not be empty and must be unique within the service
+        instance.
+    required: true
+    type: str
+  first_name:
+    description:
+      - First name.
+    required: true
+    type: str
+  last_name:
+    description:
+      - Last name.
+    required: true
+    type: str
+  password:
+    description:
+      - 'User Password. If no value is provided, a default password is generated.'
+    type: str
+  confirmation:
+    description:
+      - >-
+        Determines the type of confirmation e-mail that will be sent to the
+        newly created user.
+    type: str
+  registration_date:
+    description:
+      - >-
+        Date of user registration. The date conforms to the following format:
+        `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601 standard.<br>
+    type: datetime
+  groups:
+    description:
+      - Collection of groups user is part of.
+    type: list
+    suboptions:
+      display_name:
+        description:
+          - Group name.
+        required: true
+        type: str
+      description:
+        description:
+          - Group description. Can contain HTML formatting tags.
+        type: str
+      built_in:
+        description:
+          - >-
+            true if the group is one of the three system groups (Administrators,
+            Developers, or Guests); otherwise false.
+        type: boolean
+      type:
+        description:
+          - Group type.
+        type: str
+      external_id:
+        description:
+          - >-
+            For external groups, this property contains the id of the group from
+            the external identity provider, e.g. for Azure Active Directory
+            `aad://<tenant>.onmicrosoft.com/groups/<group object id>`; otherwise
+            the value is null.
+        type: str
 extends_documentation_fragment:
   - azure
 author:
@@ -67,21 +136,28 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreateUser
+  azure.rm.apimanagementuser:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    user_id: myUser
+    email: foobar@outlook.com
+    first_name: foo
+    last_name: bar
+    confirmation: signup
+- name: ApiManagementUpdateUser
+  azure.rm.apimanagementuser:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    user_id: myUser
+    email: foobar@outlook.com
+    first_name: foo
+    last_name: bar
+- name: ApiManagementDeleteUser
+  azure.rm.apimanagementuser:
+    resource_group: myResourceGroup
+    service_name: myService
+    user_id: myUser
     state: absent
 
 '''
@@ -107,29 +183,114 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - User entity contract properties.
   returned: always
   type: dict
   sample: null
   contains:
-    description:
+    state:
       description:
-        - Cache description
+        - >-
+          Account state. Specifies whether the user is active or not. Blocked
+          users are unable to sign into the developer portal or call any APIs of
+          subscribed products. Default state is Active.
       returned: always
       type: str
       sample: null
-    connection_string:
+    note:
       description:
-        - Runtime connection string to cache
+        - Optional note about a user set by the administrator.
       returned: always
       type: str
       sample: null
-    resource_id:
+    identities:
       description:
-        - Original uri of entity in external system cache points to
+        - Collection of user identities.
+      returned: always
+      type: dict
+      sample: null
+      contains:
+        provider:
+          description:
+            - Identity provider name.
+          returned: always
+          type: str
+          sample: null
+        id:
+          description:
+            - Identifier value within provider.
+          returned: always
+          type: str
+          sample: null
+    first_name:
+      description:
+        - First name.
       returned: always
       type: str
       sample: null
+    last_name:
+      description:
+        - Last name.
+      returned: always
+      type: str
+      sample: null
+    email:
+      description:
+        - Email address.
+      returned: always
+      type: str
+      sample: null
+    registration_date:
+      description:
+        - >-
+          Date of user registration. The date conforms to the following format:
+          `yyyy-MM-ddTHH:mm:ssZ` as specified by the ISO 8601 standard.<br>
+      returned: always
+      type: datetime
+      sample: null
+    groups:
+      description:
+        - Collection of groups user is part of.
+      returned: always
+      type: dict
+      sample: null
+      contains:
+        display_name:
+          description:
+            - Group name.
+          returned: always
+          type: str
+          sample: null
+        description:
+          description:
+            - Group description. Can contain HTML formatting tags.
+          returned: always
+          type: str
+          sample: null
+        built_in:
+          description:
+            - >-
+              true if the group is one of the three system groups
+              (Administrators, Developers, or Guests); otherwise false.
+          returned: always
+          type: boolean
+          sample: null
+        type:
+          description:
+            - Group type.
+          returned: always
+          type: str
+          sample: null
+        external_id:
+          description:
+            - >-
+              For external groups, this property contains the id of the group
+              from the external identity provider, e.g. for Azure Active
+              Directory `aad://<tenant>.onmicrosoft.com/groups/<group object
+              id>`; otherwise the value is null.
+          returned: always
+          type: str
+          sample: null
 
 '''
 
@@ -150,7 +311,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMUser(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -165,26 +326,61 @@ class AzureRMCache(AzureRMModuleBaseExt):
                 disposition='serviceName',
                 required=True
             ),
-            cache_id=dict(
+            user_id=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
+                disposition='userId',
                 required=True
             ),
-            description=dict(
+            state=dict(
+                type='str',
+                disposition='/properties/*',
+                choices=['active',
+                         'blocked',
+                         'pending',
+                         'deleted']
+            ),
+            note=dict(
                 type='str',
                 disposition='/properties/*'
             ),
-            connection_string=dict(
-                type='str',
-                disposition='/properties/connectionString',
-                required=True
+            identities=dict(
+                type='list',
+                disposition='/properties/*',
+                options=dict(
+                    provider=dict(
+                        type='str'
+                    ),
+                    id=dict(
+                        type='str'
+                    )
+                )
             ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
+            email=dict(
+                type='str',
+                disposition='/properties/*',
+                required=true
+            ),
+            first_name=dict(
+                type='str',
+                disposition='/properties/firstName',
+                required=true
+            ),
+            last_name=dict(
+                type='str',
+                disposition='/properties/lastName',
+                required=true
+            ),
+            password=dict(
+                type='str',
+                no_log=True,
+                disposition='/properties/*'
+            ),
+            confirmation=dict(
+                type='str',
+                disposition='/properties/*',
+                choices=['signup',
+                         'invite']
             ),
             state=dict(
                 type='str',
@@ -195,7 +391,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.user_id = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +406,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMUser, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                          supports_check_mode=True,
+                                          supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +435,24 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/users' +
+                    '/{{ user_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ user_name }}', self.user_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("User instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('User instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +466,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the User instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +480,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('User instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +493,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('User instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +506,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the User instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +518,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the User instance.')
+            self.fail('Error creating the User instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +530,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the User instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +541,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the User instance.')
+            self.fail('Error deleting the User instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the User instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +560,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("User instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the User instance.')
         if found is True:
             return response
 
@@ -374,7 +570,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMUser()
 
 
 if __name__ == '__main__':

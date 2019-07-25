@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementpolicy
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure Policy instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure Policy.'
 options:
   resource_group:
     description:
@@ -31,30 +31,24 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  policy_id:
     description:
-      - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+      - The identifier of the Policy.
     required: true
     type: str
-  description:
+  value:
     description:
-      - Cache description
-    type: str
-  connection_string:
-    description:
-      - Runtime connection string to cache
+      - Contents of the Policy as defined by the format.
     required: true
     type: str
-  resource_id:
+  format:
     description:
-      - Original uri of entity in external system cache points to
+      - Format of the policyContent.
     type: str
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the Policy.
+      - Use C(present) to create or update an Policy and C(absent) to delete it.
     default: present
     choices:
       - absent
@@ -67,21 +61,18 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreatePolicy
+  azure.rm.apimanagementpolicy:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    policy_id: myPolicy
+    value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
+    format: xml
+- name: ApiManagementDeletePolicy
+  azure.rm.apimanagementpolicy:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    policy_id: myPolicy
     state: absent
 
 '''
@@ -107,26 +98,20 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - Properties of the Policy.
   returned: always
   type: dict
   sample: null
   contains:
-    description:
+    value:
       description:
-        - Cache description
+        - Contents of the Policy as defined by the format.
       returned: always
       type: str
       sample: null
-    connection_string:
+    format:
       description:
-        - Runtime connection string to cache
-      returned: always
-      type: str
-      sample: null
-    resource_id:
-      description:
-        - Original uri of entity in external system cache points to
+        - Format of the policyContent.
       returned: always
       type: str
       sample: null
@@ -150,41 +135,39 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMPolicy(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
                 type='str',
                 updatable=False,
                 disposition='resourceGroupName',
-                required=True
+                required=true
             ),
             service_name=dict(
                 type='str',
                 updatable=False,
                 disposition='serviceName',
-                required=True
+                required=true
             ),
-            cache_id=dict(
+            policy_id=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
-                required=True
+                disposition='policyId',
+                required=true
             ),
-            description=dict(
+            value=dict(
                 type='str',
-                disposition='/properties/*'
+                disposition='/properties/*',
+                required=true
             ),
-            connection_string=dict(
+            format=dict(
                 type='str',
-                disposition='/properties/connectionString',
-                required=True
-            ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
+                disposition='/properties/*',
+                choices=['xml',
+                         'xml-link',
+                         'rawxml',
+                         'rawxml-link']
             ),
             state=dict(
                 type='str',
@@ -195,7 +178,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.policy_id = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +193,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMPolicy, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                            supports_check_mode=True,
+                                            supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +222,24 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/policies' +
+                    '/{{ policy_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ policy_name }}', self.policy_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("Policy instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('Policy instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +253,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the Policy instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +267,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('Policy instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +280,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('Policy instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +293,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the Policy instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +305,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the Policy instance.')
+            self.fail('Error creating the Policy instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +317,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the Policy instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +328,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the Policy instance.')
+            self.fail('Error deleting the Policy instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the Policy instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +347,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("Policy instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the Policy instance.')
         if found is True:
             return response
 
@@ -374,7 +357,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMPolicy()
 
 
 if __name__ == '__main__':

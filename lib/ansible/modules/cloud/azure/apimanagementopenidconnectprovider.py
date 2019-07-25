@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementopenidconnectprovider
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure OpenIdConnectProvider instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure OpenIdConnectProvider.'
 options:
   resource_group:
     description:
@@ -31,30 +31,40 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  opid:
     description:
-      - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+      - Identifier of the OpenID Connect Provider.
+    required: true
+    type: str
+  display_name:
+    description:
+      - User-friendly OpenID Connect Provider name.
     required: true
     type: str
   description:
     description:
-      - Cache description
+      - User-friendly description of OpenID Connect Provider.
     type: str
-  connection_string:
+  metadata_endpoint:
     description:
-      - Runtime connection string to cache
+      - Metadata endpoint URI.
     required: true
     type: str
-  resource_id:
+  client_id:
     description:
-      - Original uri of entity in external system cache points to
+      - Client ID of developer console which is the client application.
+    required: true
+    type: str
+  client_secret:
+    description:
+      - Client Secret of developer console which is the client application.
     type: str
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the OpenIdConnectProvider.
+      - >-
+        Use C(present) to create or update an OpenIdConnectProvider and
+        C(absent) to delete it.
     default: present
     choices:
       - absent
@@ -67,21 +77,25 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreateOpenIdConnectProvider
+  azure.rm.apimanagementopenidconnectprovider:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    opid: myOpenidConnectProvider
+    display_name: templateoidprovider3
+    metadata_endpoint: 'https://oidprovider-template3.net'
+    client_id: oidprovidertemplate3
+- name: ApiManagementUpdateOpenIdConnectProvider
+  azure.rm.apimanagementopenidconnectprovider:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    opid: myOpenidConnectProvider
+    client_secret: updatedsecret
+- name: ApiManagementDeleteOpenIdConnectProvider
+  azure.rm.apimanagementopenidconnectprovider:
+    resource_group: myResourceGroup
+    service_name: myService
+    opid: myOpenidConnectProvider
     state: absent
 
 '''
@@ -107,26 +121,38 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - OpenId Connect Provider contract properties.
   returned: always
   type: dict
   sample: null
   contains:
+    display_name:
+      description:
+        - User-friendly OpenID Connect Provider name.
+      returned: always
+      type: str
+      sample: null
     description:
       description:
-        - Cache description
+        - User-friendly description of OpenID Connect Provider.
       returned: always
       type: str
       sample: null
-    connection_string:
+    metadata_endpoint:
       description:
-        - Runtime connection string to cache
+        - Metadata endpoint URI.
       returned: always
       type: str
       sample: null
-    resource_id:
+    client_id:
       description:
-        - Original uri of entity in external system cache points to
+        - Client ID of developer console which is the client application.
+      returned: always
+      type: str
+      sample: null
+    client_secret:
+      description:
+        - Client Secret of developer console which is the client application.
       returned: always
       type: str
       sample: null
@@ -150,7 +176,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMOpenIdConnectProvider(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -165,26 +191,33 @@ class AzureRMCache(AzureRMModuleBaseExt):
                 disposition='serviceName',
                 required=True
             ),
-            cache_id=dict(
+            opid=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
+                required=True
+            ),
+            display_name=dict(
+                type='str',
+                disposition='/properties/displayName',
                 required=True
             ),
             description=dict(
                 type='str',
                 disposition='/properties/*'
             ),
-            connection_string=dict(
+            metadata_endpoint=dict(
                 type='str',
-                disposition='/properties/connectionString',
+                disposition='/properties/metadataEndpoint',
                 required=True
             ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
+            client_id=dict(
+                type='str',
+                disposition='/properties/clientId',
+                required=True
+            ),
+            client_secret=dict(
+                type='str',
+                disposition='/properties/clientSecret'
             ),
             state=dict(
                 type='str',
@@ -195,7 +228,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.opid = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +243,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMOpenIdConnectProvider, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                                           supports_check_mode=True,
+                                                           supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +272,24 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/openidConnectProviders' +
+                    '/{{ openid_connect_provider_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ openid_connect_provider_name }}', self.opid)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("OpenIdConnectProvider instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('OpenIdConnectProvider instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +303,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the OpenIdConnectProvider instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +317,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('OpenIdConnectProvider instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +330,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('OpenIdConnectProvider instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +343,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the OpenIdConnectProvider instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +355,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the OpenIdConnectProvider instance.')
+            self.fail('Error creating the OpenIdConnectProvider instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +367,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the OpenIdConnectProvider instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +378,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the OpenIdConnectProvider instance.')
+            self.fail('Error deleting the OpenIdConnectProvider instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the OpenIdConnectProvider instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +397,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("OpenIdConnectProvider instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the OpenIdConnectProvider instance.')
         if found is True:
             return response
 
@@ -374,7 +407,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMOpenIdConnectProvider()
 
 
 if __name__ == '__main__':

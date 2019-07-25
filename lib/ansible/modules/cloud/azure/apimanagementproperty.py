@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementproperty
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure Property instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure Property.'
 options:
   resource_group:
     description:
@@ -31,57 +31,75 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  prop_id:
+    description:
+      - Identifier of the property.
+    required: true
+    type: str
+  secret:
     description:
       - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+        Determines whether the value is a secret and should be encrypted or not.
+        Default value is false.
+    type: boolean
+  display_name:
+    description:
+      - >-
+        Unique name of Property. It may contain only letters, digits, period,
+        dash, and underscore characters.
     required: true
     type: str
-  description:
+  value:
     description:
-      - Cache description
-    type: str
-  connection_string:
-    description:
-      - Runtime connection string to cache
+      - >-
+        Value of the property. Can contain policy expressions. It may not be
+        empty or consist only of whitespace.
     required: true
-    type: str
-  resource_id:
-    description:
-      - Original uri of entity in external system cache points to
-    type: str
+    type: strs
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the Property.
+      - >-
+        Use C(present) to create or update an Property and C(absent) to delete
+        it.
     default: present
     choices:
       - absent
       - present
 extends_documentation_fragment:
   - azure
+  - azure_tags
 author:
   - Zim Kalinowski (@zikalino)
 
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreateProperty
+  azure.rm.apimanagementproperty:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    prop_id: myProperty
+    tags:
+      - foo
+      - bar
+    secret: true
+    display_name: prop3name
+    value: propValue
+- name: ApiManagementUpdateProperty
+  azure.rm.apimanagementproperty:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    prop_id: myProperty
+    tags:
+      - foo
+      - bar2
+    secret: true
+- name: ApiManagementDeleteProperty
+  azure.rm.apimanagementproperty:
+    resource_group: myResourceGroup
+    service_name: myService
+    prop_id: myProperty
     state: absent
 
 '''
@@ -107,26 +125,40 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - Property entity contract properties.
   returned: always
   type: dict
   sample: null
   contains:
-    description:
+    tags:
       description:
-        - Cache description
+        - >-
+          Optional tags that when provided can be used to filter the property
+          list.
       returned: always
       type: str
       sample: null
-    connection_string:
+    secret:
       description:
-        - Runtime connection string to cache
+        - >-
+          Determines whether the value is a secret and should be encrypted or
+          not. Default value is false.
+      returned: always
+      type: boolean
+      sample: null
+    display_name:
+      description:
+        - >-
+          Unique name of Property. It may contain only letters, digits, period,
+          dash, and underscore characters.
       returned: always
       type: str
       sample: null
-    resource_id:
+    value:
       description:
-        - Original uri of entity in external system cache points to
+        - >-
+          Value of the property. Can contain policy expressions. It may not be
+          empty or consist only of whitespace.
       returned: always
       type: str
       sample: null
@@ -150,7 +182,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMProperty(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -165,26 +197,25 @@ class AzureRMCache(AzureRMModuleBaseExt):
                 disposition='serviceName',
                 required=True
             ),
-            cache_id=dict(
+            prop_id=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
+                disposition='propId',
                 required=True
             ),
-            description=dict(
-                type='str',
+            secret=dict(
+                type='boolean',
                 disposition='/properties/*'
             ),
-            connection_string=dict(
+            display_name=dict(
                 type='str',
-                disposition='/properties/connectionString',
+                disposition='/properties/displayName',
                 required=True
             ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
+            value=dict(
+                type='str',
+                disposition='/properties/*',
+                required=True
             ),
             state=dict(
                 type='str',
@@ -195,7 +226,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.prop_id = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +241,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMProperty, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                              supports_check_mode=True,
+                                              supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +270,24 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/properties' +
+                    '/{{ property_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ property_name }}', self.prop_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("Property instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('Property instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +301,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the Property instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +315,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('Property instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +328,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('Property instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +341,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the Property instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +353,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the Property instance.')
+            self.fail('Error creating the Property instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +365,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the Property instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +376,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the Property instance.')
+            self.fail('Error deleting the Property instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the Property instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +395,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("Property instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the Property instance.')
         if found is True:
             return response
 
@@ -374,7 +405,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMProperty()
 
 
 if __name__ == '__main__':

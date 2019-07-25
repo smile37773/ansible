@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementcache
+module: apimanagementproductgroup
 version_added: '2.9'
-short_description: Manage Azure Cache instance.
+short_description: Manage Azure ProductGroup instance.
 description:
-  - 'Create, update and delete instance of Azure Cache.'
+  - 'Create, update and delete instance of Azure ProductGroup.'
 options:
   resource_group:
     description:
@@ -31,30 +31,49 @@ options:
       - The name of the API Management service.
     required: true
     type: str
-  cache_id:
+  product_id:
     description:
       - >-
-        Identifier of the Cache entity. Cache identifier (should be either
-        'default' or valid Azure region identifier).
+        Product identifier. Must be unique in the current API Management service
+        instance.
+    required: true
+    type: str
+  group_id:
+    description:
+      - >-
+        Group identifier. Must be unique in the current API Management service
+        instance.
+    required: true
+    type: str
+  display_name:
+    description:
+      - Group name.
     required: true
     type: str
   description:
     description:
-      - Cache description
+      - Group description. Can contain HTML formatting tags.
     type: str
-  connection_string:
+  built_in:
     description:
-      - Runtime connection string to cache
-    required: true
-    type: str
-  resource_id:
+      - >-
+        true if the group is one of the three system groups (Administrators,
+        Developers, or Guests); otherwise false.
+    type: boolean
+  external_id:
     description:
-      - Original uri of entity in external system cache points to
+      - >-
+        For external groups, this property contains the id of the group from the
+        external identity provider, e.g. for Azure Active Directory
+        `aad://<tenant>.onmicrosoft.com/groups/<group object id>`; otherwise the
+        value is null.
     type: str
   state:
     description:
-      - Assert the state of the Cache.
-      - Use C(present) to create or update an Cache and C(absent) to delete it.
+      - Assert the state of the ProductGroup.
+      - >-
+        Use C(present) to create or update an ProductGroup and C(absent) to
+        delete it.
     default: present
     choices:
       - absent
@@ -67,21 +86,18 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateCache
-  azure.rm.apimanagementcache:
+- name: ApiManagementCreateProductGroup
+  azure.rm.apimanagementproductgroup:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
-    description: Redis cache instances in West India
-    connection_string: 'contoso5.redis.cache.windows.net,ssl=true,password=...'
-    resource_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.Cache/Redis/{{ redis_name }}
-- name: ApiManagementDeleteCache
-  azure.rm.apimanagementcache:
+    product_id: myProduct
+    group_id: myGroup
+- name: ApiManagementDeleteProductGroup
+  azure.rm.apimanagementproductgroup:
     resource_group: myResourceGroup
     service_name: myService
-    cache_id: myCache
+    product_id: myProduct
+    group_id: myGroup
     state: absent
 
 '''
@@ -107,29 +123,10 @@ type:
   sample: null
 properties:
   description:
-    - Cache properties details.
+    - Group entity contract properties.
   returned: always
   type: dict
   sample: null
-  contains:
-    description:
-      description:
-        - Cache description
-      returned: always
-      type: str
-      sample: null
-    connection_string:
-      description:
-        - Runtime connection string to cache
-      returned: always
-      type: str
-      sample: null
-    resource_id:
-      description:
-        - Original uri of entity in external system cache points to
-      returned: always
-      type: str
-      sample: null
 
 '''
 
@@ -150,7 +147,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMCache(AzureRMModuleBaseExt):
+class AzureRMProductGroup(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -165,26 +162,41 @@ class AzureRMCache(AzureRMModuleBaseExt):
                 disposition='serviceName',
                 required=True
             ),
-            cache_id=dict(
+            product_id=dict(
                 type='str',
                 updatable=False,
-                disposition='cacheId',
+                disposition='productId',
+                required=True
+            ),
+            group_id=dict(
+                type='str',
+                updatable=False,
+                disposition='groupId',
+                required=True
+            ),
+            display_name=dict(
+                type='str',
+                disposition='/properties/displayName',
                 required=True
             ),
             description=dict(
                 type='str',
                 disposition='/properties/*'
             ),
-            connection_string=dict(
-                type='str',
-                disposition='/properties/connectionString',
-                required=True
+            built_in=dict(
+                type='boolean',
+                disposition='/properties/builtIn'
             ),
-            resource_id=dict(
-                type='raw',
-                disposition='/properties/resourceId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.Cache/Redis/{{ name }}')
+            type=dict(
+                type='str',
+                disposition='/properties/*',
+                choices=['custom',
+                         'system',
+                         'external']
+            ),
+            external_id=dict(
+                type='str',
+                disposition='/properties/externalId'
             ),
             state=dict(
                 type='str',
@@ -195,7 +207,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.service_name = None
-        self.cache_id = None
+        self.product_id = None
+        self.group_id = None
+        self.properties = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -210,9 +224,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMCache, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                           supports_check_mode=True,
-                                           supports_tags=True)
+        super(AzureRMProductGroup, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                                  supports_check_mode=True,
+                                                  supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -239,24 +253,27 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     '/Microsoft.ApiManagement' +
                     '/service' +
                     '/{{ service_name }}' +
-                    '/caches' +
-                    '/{{ cache_name }}')
+                    '/products' +
+                    '/{{ product_name }}' +
+                    '/groups' +
+                    '/{{ group_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ cache_name }}', self.cache_id)
+        self.url = self.url.replace('{{ product_name }}', self.product_id)
+        self.url = self.url.replace('{{ group_name }}', self.group_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("Cache instance doesn't exist")
+            self.log("ProductGroup instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('Cache instance already exists')
+            self.log('ProductGroup instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -270,7 +287,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the Cache instance')
+            self.log('Need to Create / Update the ProductGroup instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -284,7 +301,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('Cache instance deleted')
+            self.log('ProductGroup instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -297,7 +314,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('Cache instance unchanged')
+            self.log('ProductGroup instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -310,7 +327,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the Cache instance {0}'.format(self.))
+        # self.log('Creating / Updating the ProductGroup instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -322,8 +339,8 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the Cache instance.')
-            self.fail('Error creating the Cache instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the ProductGroup instance.')
+            self.fail('Error creating the ProductGroup instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -334,7 +351,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the Cache instance {0}'.format(self.))
+        # self.log('Deleting the ProductGroup instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -345,13 +362,13 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the Cache instance.')
-            self.fail('Error deleting the Cache instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the ProductGroup instance.')
+            self.fail('Error deleting the ProductGroup instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the Cache instance {0} is present'.format(self.))
+        # self.log('Checking if the ProductGroup instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -364,9 +381,9 @@ class AzureRMCache(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("Cache instance : {0} found".format(response.name))
+            # self.log("ProductGroup instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the Cache instance.')
+            self.log('Did not find the ProductGroup instance.')
         if found is True:
             return response
 
@@ -374,7 +391,7 @@ class AzureRMCache(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMCache()
+    AzureRMProductGroup()
 
 
 if __name__ == '__main__':
