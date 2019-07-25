@@ -275,9 +275,9 @@ class AzureRMProduct(AzureRMModuleBaseExt):
                 type='number',
                 disposition='/properties/subscriptionsLimit'
             ),
-            state=dict(
+            pstate=dict(
                 type='str',
-                disposition='/properties/*',
+                disposition='/properties/state',
                 choices=['notPublished',
                          'published']
             ),

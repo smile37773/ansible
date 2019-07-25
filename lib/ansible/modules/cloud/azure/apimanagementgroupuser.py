@@ -218,9 +218,9 @@ class AzureRMGroupUser(AzureRMModuleBaseExt):
                 disposition='userId',
                 required=True
             ),
-            state=dict(
+            gstate=dict(
                 type='str',
-                disposition='/properties/*',
+                disposition='/properties/state',
                 choices=['active',
                          'blocked',
                          'pending',
