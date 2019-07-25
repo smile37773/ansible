@@ -297,7 +297,6 @@ class AzureRMGroupUser(AzureRMModuleBaseExt):
         self.service_name = None
         self.group_id = None
         self.user_id = None
-        self.properties = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
