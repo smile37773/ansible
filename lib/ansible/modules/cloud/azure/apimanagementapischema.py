@@ -177,30 +177,30 @@ class AzureRMApiSchema(AzureRMModuleBaseExt):
                 type='str',
                 updatable=False,
                 disposition='resourceGroupName',
-                required=true
+                required=True
             ),
             service_name=dict(
                 type='str',
                 updatable=False,
                 disposition='serviceName',
-                required=true
+                required=True
             ),
             api_id=dict(
                 type='str',
                 updatable=False,
                 disposition='apiId',
-                required=true
+                required=True
             ),
             schema_id=dict(
                 type='str',
                 updatable=False,
                 disposition='schemaId',
-                required=true
+                required=True
             ),
             content_type=dict(
                 type='str',
                 disposition='/properties/contentType',
-                required=true
+                required=True
             ),
             document=dict(
                 type='dict',
