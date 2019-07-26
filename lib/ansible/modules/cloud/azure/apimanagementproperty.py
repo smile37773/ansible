@@ -80,9 +80,6 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     prop_id: myProperty
-    ptags:
-      - foo
-      - bar
     secret: true
     display_name: prop3name
     value: propValue
@@ -91,9 +88,6 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     prop_id: myProperty
-    ptags:
-      - foo
-      - bar2
     secret: true
 - name: ApiManagementDeleteProperty
   azure.rm.apimanagementproperty:
@@ -211,10 +205,6 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 type='str',
                 disposition='/properties/displayName',
                 required=True
-            ),
-            ptags=dict(
-                type='str',
-                disposition='/properties/tags'
             ),
             value=dict(
                 type='str',
