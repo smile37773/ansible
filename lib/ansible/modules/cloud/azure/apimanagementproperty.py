@@ -80,7 +80,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     prop_id: myProperty
-    tags:
+    ptags:
       - foo
       - bar
     secret: true
@@ -91,7 +91,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     prop_id: myProperty
-    tags:
+    ptags:
       - foo
       - bar2
     secret: true
@@ -212,9 +212,9 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 disposition='/properties/displayName',
                 required=True
             ),
-            tags= dict(
-                type='list',
-                disposition='/properties/*'
+            ptags=dict(
+                type='str',
+                disposition='/properties/tags'
             ),
             value=dict(
                 type='str',
