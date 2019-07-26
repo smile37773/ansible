@@ -62,13 +62,13 @@ EXAMPLES = '''
   azure.rm.apimanagementnotificationrecipientemail:
     resource_group: myResourceGroup
     service_name: myService
-    notification_name: myNotification
+    notification_name: RequestPublisherNotificationMessage
     email: myRecipientEmail
 - name: ApiManagementDeleteNotificationRecipientEmail
   azure.rm.apimanagementnotificationrecipientemail:
     resource_group: myResourceGroup
     service_name: myService
-    notification_name: myNotification
+    notification_name: RequestPublisherNotificationMessage
     email: myRecipientEmail
     state: absent
 
@@ -184,6 +184,7 @@ class AzureRMNotificationRecipientEmail(AzureRMModuleBaseExt):
                 self.body[key] = kwargs[key]
 
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
+        self.body["preperties"]["email"]=self.email
 
         old_response = None
         response = None

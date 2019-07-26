@@ -74,7 +74,7 @@ EXAMPLES = '''
   azure.rm.apimanagementnotification:
     resource_group: myResourceGroup
     service_name: myService
-    name: myNotification
+    name: RequestPublisherNotificationMessage
     title: Subscription requests (requiring approval)
 
 '''
