@@ -75,6 +75,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     name: myNotification
+    title: Subscription requests (requiring approval)
 
 '''
 

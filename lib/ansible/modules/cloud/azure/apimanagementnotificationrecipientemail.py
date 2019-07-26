@@ -143,10 +143,7 @@ class AzureRMNotificationRecipientEmail(AzureRMModuleBaseExt):
             email=dict(
                 type='str',
                 updatable=False,
-                required=True
-            ),
-            email=dict(
-                type='str',
+                required=True,
                 disposition='/properties/*'
             ),
             state=dict(
