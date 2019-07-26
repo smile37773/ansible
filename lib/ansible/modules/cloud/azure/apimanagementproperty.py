@@ -204,7 +204,7 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 required=True
             ),
             secret=dict(
-                type='boolean',
+                type='bool',
                 disposition='/properties/*'
             ),
             display_name=dict(
