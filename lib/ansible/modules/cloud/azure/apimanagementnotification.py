@@ -34,7 +34,6 @@ options:
   title:
     description:
       - Title of the Notification.
-    required: true
     type: str
   description:
     description:
@@ -76,7 +75,6 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     name: myNotification
-    title: Subscription requests (requiring approval)
 
 '''
 
@@ -148,8 +146,7 @@ class AzureRMNotification(AzureRMModuleBaseExt):
             ),
             title=dict(
                 type='str',
-                disposition='/properties/*',
-                required=True
+                disposition='/properties/*'
             ),
             description=dict(
                 type='str',
