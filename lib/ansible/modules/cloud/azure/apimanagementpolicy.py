@@ -65,14 +65,14 @@ EXAMPLES = '''
   azure.rm.apimanagementpolicy:
     resource_group: myResourceGroup
     service_name: myService
-    policy_id: myPolicy
+    policy_id: policy
     value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
     format: xml
 - name: ApiManagementDeletePolicy
   azure.rm.apimanagementpolicy:
     resource_group: myResourceGroup
     service_name: myService
-    policy_id: myPolicy
+    policy_id: policy
     state: absent
 
 '''

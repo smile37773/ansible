@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 #!/usr/bin/python
 #
 # Copyright (c) 2019 Zim Kalinowski, (@zikalino)
@@ -105,13 +106,13 @@ EXAMPLES = '''
   azure.rm.apimanagementproduct:
     resource_group: myResourceGroup
     service_name: myService
-    product_id: myProduct
-    display_name: Test Template ProductName4
+    product_id: testproduct
+    display_name: "Test Template ProductName 4"
 - name: ApiManagementDeleteProduct
   azure.rm.apimanagementproduct:
     resource_group: myResourceGroup
     service_name: myService
-    product_id: myProduct
+    product_id: testproduct
     state: absent
 
 '''
