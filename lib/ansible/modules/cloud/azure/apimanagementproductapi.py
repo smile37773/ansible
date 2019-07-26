@@ -414,8 +414,7 @@ class AzureRMProductApi(AzureRMModuleBaseExt):
             ),
             path=dict(
                 type='str',
-                disposition='/properties/*',
-                required=True
+                disposition='/properties/*'
             ),
             protocols=dict(
                 type='list',
