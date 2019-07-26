@@ -136,7 +136,7 @@ properties:
           Optional tags that when provided can be used to filter the property
           list.
       returned: always
-      type: str
+      type: list
       sample: null
     secret:
       description:
@@ -212,6 +212,10 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 disposition='/properties/displayName',
                 required=True
             ),
+            tags= dict(
+                type='list',
+                disposition='/properties/*'
+            ),
             value=dict(
                 type='str',
                 disposition='/properties/*',
@@ -227,6 +231,7 @@ class AzureRMProperty(AzureRMModuleBaseExt):
         self.resource_group = None
         self.service_name = None
         self.prop_id = None
+        self.tags = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -253,6 +258,7 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 self.body[key] = kwargs[key]
 
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
+        self.body['tags']= self.tags
 
         old_response = None
         response = None

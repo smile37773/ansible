@@ -91,6 +91,7 @@ EXAMPLES = '''
     service_name: myService
     product_id: myProduct
     group_id: myGroup
+    display_name: EchoApi
 - name: ApiManagementDeleteProductGroup
   azure.rm.apimanagementproductgroup:
     resource_group: myResourceGroup

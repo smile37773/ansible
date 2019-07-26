@@ -75,14 +75,14 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     product_id: myProduct
-    policy_id: myPolicy
-    value: "<policies>\r\n  <inbound>\r\n    <rate-limit calls=\"{{call-count}}\" renewal-period=\"15\"></rate-limit>\r\n    <log-to-eventhub logger-id=\"16\">\r\n                      @( string.Join(\",\", DateTime.UtcNow, context.Deployment.ServiceName, context.RequestId, context.Request.IpAddress, context.Operation.Name) ) \r\n                  </log-to-eventhub>\r\n    <quota-by-key calls=\"40\" counter-key=\"cc\" renewal-period=\"3600\" increment-count=\"@(context.Request.Method == &quot;POST&quot; ? 1:2)\" />\r\n    <base />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n</policies>"
+    policy_id: policy
+    value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
     format: xml
 - name: ApiManagementDeleteProductPolicy
   azure.rm.apimanagementproductpolicy:
     resource_group: myResourceGroup
     service_name: myService
-    product_id: myProduct
+    product_id: product
     policy_id: myPolicy
     state: absent
 
