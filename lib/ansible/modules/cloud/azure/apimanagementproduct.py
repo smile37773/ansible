@@ -106,13 +106,13 @@ EXAMPLES = '''
   azure.rm.apimanagementproduct:
     resource_group: myResourceGroup
     service_name: myService
-    product_id: testproduct
-    display_name: "Test Template ProductName 4"
+    product_id: myProduct
+    display_name: Test Template ProductName
 - name: ApiManagementDeleteProduct
   azure.rm.apimanagementproduct:
     resource_group: myResourceGroup
     service_name: myService
-    product_id: testproduct
+    product_id: myProduct
     state: absent
 
 '''
