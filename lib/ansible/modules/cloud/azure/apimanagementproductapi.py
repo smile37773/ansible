@@ -159,7 +159,6 @@ options:
         within the API Management service instance. It is appended to the API
         endpoint base URL specified during the service instance creation to form
         a public URL for this API.
-    required: true
     type: str
   protocols:
     description:
@@ -226,6 +225,7 @@ EXAMPLES = '''
     service_name: myService
     product_id: myProduct
     api_id: myApi
+    path: newapiPath
 - name: ApiManagementDeleteProductApi
   azure.rm.apimanagementproductapi:
     resource_group: myResourceGroup

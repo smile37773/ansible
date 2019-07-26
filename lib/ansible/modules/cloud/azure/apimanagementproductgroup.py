@@ -48,7 +48,6 @@ options:
   display_name:
     description:
       - Group name.
-    required: true
     type: str
   description:
     description:
@@ -176,8 +175,7 @@ class AzureRMProductGroup(AzureRMModuleBaseExt):
             ),
             display_name=dict(
                 type='str',
-                disposition='/properties/displayName',
-                required=True
+                disposition='/properties/displayName'
             ),
             description=dict(
                 type='str',
