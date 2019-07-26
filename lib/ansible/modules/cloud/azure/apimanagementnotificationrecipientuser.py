@@ -63,13 +63,13 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     notification_name: RequestPublisherNotificationMessage
-    user_id: myRecipientUser
+    user_id: myUser
 - name: ApiManagementDeleteNotificationRecipientUser
   azure.rm.apimanagementnotificationrecipientuser:
     resource_group: myResourceGroup
     service_name: myService
     notification_name: RequestPublisherNotificationMessage
-    user_id: myRecipientUser
+    user_id: myUser
     state: absent
 
 '''

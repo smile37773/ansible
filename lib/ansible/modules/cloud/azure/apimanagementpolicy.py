@@ -142,24 +142,24 @@ class AzureRMPolicy(AzureRMModuleBaseExt):
                 type='str',
                 updatable=False,
                 disposition='resourceGroupName',
-                required=true
+                required=True
             ),
             service_name=dict(
                 type='str',
                 updatable=False,
                 disposition='serviceName',
-                required=true
+                required=True
             ),
             policy_id=dict(
                 type='str',
                 updatable=False,
                 disposition='policyId',
-                required=true
+                required=True
             ),
             value=dict(
                 type='str',
                 disposition='/properties/*',
-                required=true
+                required=True
             ),
             format=dict(
                 type='str',
