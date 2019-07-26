@@ -156,7 +156,7 @@ class AzureRMNotificationRecipientEmail(AzureRMModuleBaseExt):
         self.resource_group = None
         self.service_name = None
         self.notification_name = None
-        self.email = None
+        self.email_name = None
         self.properties = None
 
         self.results = dict(changed=False)
@@ -183,8 +183,8 @@ class AzureRMNotificationRecipientEmail(AzureRMModuleBaseExt):
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
+        self.email_name= self.body["email"]
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
-        self.body["preperties"]["email"]=self.email
 
         old_response = None
         response = None
@@ -210,7 +210,7 @@ class AzureRMNotificationRecipientEmail(AzureRMModuleBaseExt):
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
         self.url = self.url.replace('{{ notification_name }}', self.notification_name)
-        self.url = self.url.replace('{{ recipient_email_name }}', self.email)
+        self.url = self.url.replace('{{ recipient_email_name }}', self.email_name)
 
         old_response = self.get_resource()
 
