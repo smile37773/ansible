@@ -106,13 +106,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     product_id: myProduct
-    display_name: Test Template ProductName 4
-- name: ApiManagementUpdateProduct
-  azure.rm.apimanagementproduct:
-    resource_group: myResourceGroup
-    service_name: myService
-    product_id: myProduct
-    display_name: Test Template ProductName 4
+    display_name: Test Template ProductName4
 - name: ApiManagementDeleteProduct
   azure.rm.apimanagementproduct:
     resource_group: myResourceGroup
