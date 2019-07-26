@@ -41,7 +41,7 @@ options:
       - >-
         Determines whether the value is a secret and should be encrypted or not.
         Default value is false.
-    type: boolean
+    type: bool
   display_name:
     description:
       - >-
@@ -144,7 +144,7 @@ properties:
           Determines whether the value is a secret and should be encrypted or
           not. Default value is false.
       returned: always
-      type: boolean
+      type: bool
       sample: null
     display_name:
       description:
@@ -231,7 +231,6 @@ class AzureRMProperty(AzureRMModuleBaseExt):
         self.resource_group = None
         self.service_name = None
         self.prop_id = None
-        self.tags = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -258,7 +257,6 @@ class AzureRMProperty(AzureRMModuleBaseExt):
                 self.body[key] = kwargs[key]
 
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
-        self.body['tags']= self.tags
 
         old_response = None
         response = None

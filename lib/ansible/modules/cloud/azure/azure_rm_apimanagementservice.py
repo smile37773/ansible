@@ -76,13 +76,13 @@ options:
             The property is useful if a service has multiple custom hostname
             enabled and it needs to decide on the default ssl certificate. The
             setting only applied to Proxy Hostname Type.
-        type: boolean
+        type: bool
       negotiate_client_certificate:
         description:
           - >-
             Specify true to always negotiate client certificate on the hostname.
             Default Value is false.
-        type: boolean
+        type: bool
       certificate:
         description:
           - Certificate information.
@@ -282,7 +282,7 @@ options:
         enforces a client certificate to be presented on each request to the
         gateway. This also enables the ability to authenticate the certificate
         in the policy on the gateway.
-      type: boolean
+      type: bool
   virtual_network_type:
     description:
       - >-
@@ -463,11 +463,11 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                         disposition='certificatePassword'
                     ),
                     default_ssl_binding=dict(
-                        type='boolean',
+                        type='bool',
                         disposition='defaultSslBinding'
                     ),
                     negotiate_client_certificate=dict(
-                        type='boolean',
+                        type='bool',
                         disposition='negotiateClientCertificate'
                     ),
                     certificate=dict(
@@ -609,7 +609,7 @@ class AzureRMApiManagementService(AzureRMModuleBaseExt):
                 )
             ),
             enable_client_certificate=dict(
-                type='boolean',
+                type='bool',
                 disposition='/properties/enableClientCertificate'
             ),
             virtual_network_type=dict(
