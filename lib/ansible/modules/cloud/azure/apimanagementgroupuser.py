@@ -136,6 +136,9 @@ EXAMPLES = '''
     service_name: myService
     group_id: myGroup
     user_id: myUser
+    first_name: test
+    last_name: user
+    gstate: active
 - name: ApiManagementDeleteGroupUser
   azure.rm.apimanagementgroupuser:
     resource_group: myResourceGroup

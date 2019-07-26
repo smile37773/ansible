@@ -38,7 +38,7 @@ options:
         instance.
     required: true
     type: str
-  state:
+  ustate:
     description:
       - Assert the state of the User.
       - Use C(present) to create or update an User and C(absent) to delete it.
@@ -332,9 +332,9 @@ class AzureRMUser(AzureRMModuleBaseExt):
                 disposition='userId',
                 required=True
             ),
-            state=dict(
+            ustate=dict(
                 type='str',
-                disposition='/properties/*',
+                disposition='/properties/state',
                 choices=['active',
                          'blocked',
                          'pending',
@@ -359,17 +359,17 @@ class AzureRMUser(AzureRMModuleBaseExt):
             email=dict(
                 type='str',
                 disposition='/properties/*',
-                required=true
+                required=True
             ),
             first_name=dict(
                 type='str',
                 disposition='/properties/firstName',
-                required=true
+                required=True
             ),
             last_name=dict(
                 type='str',
                 disposition='/properties/lastName',
-                required=true
+                required=True
             ),
             password=dict(
                 type='str',

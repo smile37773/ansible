@@ -284,7 +284,7 @@ class AzureRMProduct(AzureRMModuleBaseExt):
             display_name=dict(
                 type='str',
                 disposition='/properties/displayName',
-                required=true
+                required=True
             ),
             state=dict(
                 type='str',
