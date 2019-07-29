@@ -170,7 +170,7 @@ EXAMPLES = '''
   azure.rm.apimanagementdiagnostic:
     resource_group: myResourceGroup
     service_name: myService
-    diagnostic_id: myDiagnostic
+    diagnostic_id: applicationinsights
     always_log: allErrors
     logger_id: /loggers/azuremonitor
     sampling:
