@@ -102,7 +102,7 @@ EXAMPLES = '''
     logger_type: applicationInsights
     description: adding a new logger
     credentials:
-      instrumentationKey: 11................a1
+      instrumentationKey: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 - name: ApiManagementUpdateLogger
   azure.rm.apimanagementlogger:
     resource_group: myResourceGroup
@@ -237,7 +237,7 @@ class AzureRMLogger(AzureRMModuleBaseExt):
                 disposition='/properties/*'
             ),
             credentials=dict(
-                type='str',
+                type='dict',
                 disposition='/properties/*',
                 required=True
             ),
