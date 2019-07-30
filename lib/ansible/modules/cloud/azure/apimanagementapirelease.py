@@ -78,17 +78,8 @@ EXAMPLES = '''
   azure.rm.apimanagementapirelease:
     resource_group: myResourceGroup
     service_name: myService
-    api_id: >-
-      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
-      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
-      api_name }}
-    release_id: myRelease
-    notes: yahooagain
-- name: ApiManagementUpdateApiRelease
-  azure.rm.apimanagementapirelease:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: >-
+    api_id: myApi
+    papi_id: >-
       /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
       }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
       api_name }}
@@ -204,11 +195,8 @@ class AzureRMApiRelease(AzureRMModuleBaseExt):
                 required=True
             ),
             papi_id=dict(
-                type='raw',
-                disposition='/properties/apiId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
-                         '/{{ service_name }}/apis/{{ name }}')
+                type='str',
+                disposition='/properties/apiId'
             ),
             notes=dict(
                 type='str',
