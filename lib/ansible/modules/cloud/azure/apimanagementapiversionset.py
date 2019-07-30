@@ -90,7 +90,7 @@ EXAMPLES = '''
     service_name: myService
     version_set_id: myApiVersionSet
     description: Version configuration
-    display_name: api set 1
+    display_name: "api set 1"
     versioning_scheme: Segment
 - name: ApiManagementUpdateApiVersionSet
   azure.rm.apimanagementapiversionset:
@@ -98,7 +98,7 @@ EXAMPLES = '''
     service_name: myService
     version_set_id: myApiVersionSet
     description: Version configuration
-    display_name: api set 1
+    display_name: "api set 1"
     versioning_scheme: Segment
 - name: ApiManagementDeleteApiVersionSet
   azure.rm.apimanagementapiversionset:

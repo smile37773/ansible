@@ -85,7 +85,7 @@ options:
         If true, authorization server will include state parameter from the
         authorization request to its response. Client may use state parameter to
         raise protocol security.
-    type: boolean
+    type: bool
   default_scope:
     description:
       - >-
@@ -305,7 +305,7 @@ properties:
           authorization request to its response. Client may use state parameter
           to raise protocol security.
       returned: always
-      type: boolean
+      type: bool
       sample: null
     default_scope:
       description:
@@ -464,7 +464,7 @@ class AzureRMAuthorizationServer(AzureRMModuleBaseExt):
                 disposition='/properties/tokenEndpoint'
             ),
             support_state=dict(
-                type='boolean',
+                type='bool',
                 disposition='/properties/supportState'
             ),
             default_scope=dict(
