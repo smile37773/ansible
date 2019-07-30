@@ -243,7 +243,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
             ),
             user_id=dict(
                 type='raw',
-                disposition='/properties/userId'
+                disposition='/properties/userId',
                 pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
                          '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
                          '/{{ service_name }}/users/{{ name }}')
@@ -284,6 +284,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
+        self.api_id =  kwargs['api_id']
         self.body['user_id'] = kwargs['user_id']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
