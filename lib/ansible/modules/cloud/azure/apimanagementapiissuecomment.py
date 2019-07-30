@@ -53,7 +53,6 @@ options:
   text:
     description:
       - Comment text.
-    required: true
     type: str
   created_date:
     description:
@@ -62,19 +61,6 @@ options:
   user_id:
     description:
       - A resource identifier for the user who left the comment.
-    required: true
-    type: str
-  id:
-    description:
-      - Resource ID.
-    type: str
-  name:
-    description:
-      - Resource name.
-    type: str
-  type:
-    description:
-      - Resource type for API Management resource.
     type: str
   state:
     description:
@@ -217,8 +203,7 @@ class AzureRMApiIssueComment(AzureRMModuleBaseExt):
             ),
             text=dict(
                 type='str',
-                disposition='/properties/*',
-                required=True
+                disposition='/properties/*'
             ),
             created_date=dict(
                 type='str',
@@ -226,11 +211,7 @@ class AzureRMApiIssueComment(AzureRMModuleBaseExt):
             ),
             user_id=dict(
                 type='raw',
-                disposition='/properties/userId',
-                required=True,
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
-                         '/{{ service_name }}/users/{{ name }}')
+                disposition='/properties/userId'
             ),
             state=dict(
                 type='str',
