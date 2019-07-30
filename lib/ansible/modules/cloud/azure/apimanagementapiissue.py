@@ -86,6 +86,10 @@ EXAMPLES = '''
     pstate: open
     title: New API issue
     description: New API issue description
+    papi_id: >-
+      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
+      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
+      api_name}}
     user_id: >-
       /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
       }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/users/{{

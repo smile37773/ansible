@@ -58,7 +58,7 @@ options:
   created_date:
     description:
       - Date and time when the comment was created.
-    type: datetime
+    type: str
   user_id:
     description:
       - A resource identifier for the user who left the comment.
@@ -154,7 +154,7 @@ properties:
       description:
         - Date and time when the comment was created.
       returned: always
-      type: datetime
+      type: str
       sample: null
     user_id:
       description:
@@ -221,7 +221,7 @@ class AzureRMApiIssueComment(AzureRMModuleBaseExt):
                 required=True
             ),
             created_date=dict(
-                type='datetime',
+                type='str',
                 disposition='/properties/createdDate'
             ),
             user_id=dict(
