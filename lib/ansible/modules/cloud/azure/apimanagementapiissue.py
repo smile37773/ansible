@@ -45,7 +45,7 @@ options:
   created_date:
     description:
       - Date and time when the issue was created.
-    type: datetime
+    type: str
   state:
     description:
       - Assert the state of the ApiIssue.
@@ -140,7 +140,7 @@ properties:
       description:
         - Date and time when the issue was created.
       returned: always
-      type: datetime
+      type: str
       sample: null
     state:
       description:
@@ -220,7 +220,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
                 required=True
             ),
             created_date=dict(
-                type='datetime',
+                type='str',
                 disposition='/properties/createdDate'
             ),
             pstate=dict(
