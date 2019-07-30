@@ -269,6 +269,7 @@ class AzureRMApiIssueComment(AzureRMModuleBaseExt):
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
+        self.body['user_id'] = kwargs['user_id']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
