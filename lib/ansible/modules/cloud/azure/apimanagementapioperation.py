@@ -349,18 +349,6 @@ options:
         /customers/{cid}/orders/{oid}/?date={date}
     required: true
     type: str
-  id:
-    description:
-      - Resource ID.
-    type: str
-  name:
-    description:
-      - Resource name.
-    type: str
-  type:
-    description:
-      - Resource type for API Management resource.
-    type: str
   state:
     description:
       - Assert the state of the ApiOperation.

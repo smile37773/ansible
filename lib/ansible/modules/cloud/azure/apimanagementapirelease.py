@@ -15,11 +15,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = '''
 ---
-module: apimanagementapipolicy
+module: apimanagementapirelease
 version_added: '2.9'
-short_description: Manage Azure ApiPolicy instance.
+short_description: Manage Azure ApiRelease instance.
 description:
-  - 'Create, update and delete instance of Azure ApiPolicy.'
+  - 'Create, update and delete instance of Azure ApiRelease.'
 options:
   resource_group:
     description:
@@ -33,43 +33,34 @@ options:
     type: str
   api_id:
     description:
+      - Identifier of the API the release belongs to.
+    type: str
+  release_id:
+    description:
       - >-
-        API revision identifier. Must be unique in the current API Management
-        service instance. Non-current revision has ;rev=n as a suffix where n is
-        the revision number.
+        Release identifier within an API. Must be unique in the current API
+        Management service instance.
     required: true
     type: str
-  policy_id:
+  notes:
     description:
-      - The identifier of the Policy.
-    required: true
+      - Release Notes
     type: str
-  value:
+  created_date_time:
     description:
-      - Contents of the Policy as defined by the format.
-    required: true
+      - >-
+        The time the API was released. The date conforms to the following
+        format: yyyy-MM-ddTHH:mm:ssZ as specified by the ISO 8601 standard.
     type: str
-  format:
+  updated_date_time:
     description:
-      - Format of the policyContent.
-    type: str
-  id:
-    description:
-      - Resource ID.
-    type: str
-  name:
-    description:
-      - Resource name.
-    type: str
-  type:
-    description:
-      - Resource type for API Management resource.
+      - The time the API release was updated.
     type: str
   state:
     description:
-      - Assert the state of the ApiPolicy.
+      - Assert the state of the ApiRelease.
       - >-
-        Use C(present) to create or update an ApiPolicy and C(absent) to delete
+        Use C(present) to create or update an ApiRelease and C(absent) to delete
         it.
     default: present
     choices:
@@ -83,28 +74,32 @@ author:
 '''
 
 EXAMPLES = '''
-- name: ApiManagementCreateApiPolicy
-  azure.rm.apimanagementapipolicy:
+- name: ApiManagementCreateApiRelease
+  azure.rm.apimanagementapirelease:
+    resource_group: myResourceGroup
+    service_name: myService
+    api_id: >-
+      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
+      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
+      api_name }}
+    release_id: myRelease
+    notes: yahooagain
+- name: ApiManagementUpdateApiRelease
+  azure.rm.apimanagementapirelease:
+    resource_group: myResourceGroup
+    service_name: myService
+    api_id: >-
+      /subscriptions/{{ subscription_id }}/resourceGroups/{{ resource_group
+      }}/providers/Microsoft.ApiManagement/service/{{ service_name }}/apis/{{
+      api_name }}
+    release_id: myRelease
+    notes: yahooagain
+- name: ApiManagementDeleteApiRelease
+  azure.rm.apimanagementapirelease:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
-    policy_id: policy
-    value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
-    format: xml
-- name: ApiManagementCreateApiPolicyNonXmlEncoded
-  azure.rm.apimanagementapipolicy:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    policy_id: myPolicy
-    value: "<policies>\r\n     <inbound>\r\n     <base />\r\n  <set-header name=\"newvalue\" exists-action=\"override\">\r\n   <value>\"@(context.Request.Headers.FirstOrDefault(h => h.Ke==\"Via\"))\" </value>\r\n    </set-header>\r\n  </inbound>\r\n      </policies>"
-    format: rawxml
-- name: ApiManagementDeleteApiPolicy
-  azure.rm.apimanagementapipolicy:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-    policy_id: myPolicy
+    release_id: myRelease
     state: absent
 
 '''
@@ -130,20 +125,34 @@ type:
   sample: null
 properties:
   description:
-    - Properties of the Policy.
+    - ApiRelease entity contract properties.
   returned: always
   type: dict
   sample: null
   contains:
-    value:
+    api_id:
       description:
-        - Contents of the Policy as defined by the format.
+        - Identifier of the API the release belongs to.
       returned: always
       type: str
       sample: null
-    format:
+    created_date_time:
       description:
-        - Format of the policyContent.
+        - >-
+          The time the API was released. The date conforms to the following
+          format: yyyy-MM-ddTHH:mm:ssZ as specified by the ISO 8601 standard.
+      returned: always
+      type: str
+      sample: null
+    updated_date_time:
+      description:
+        - The time the API release was updated.
+      returned: always
+      type: str
+      sample: null
+    notes:
+      description:
+        - Release Notes
       returned: always
       type: str
       sample: null
@@ -167,7 +176,7 @@ class Actions:
     NoAction, Create, Update, Delete = range(4)
 
 
-class AzureRMApiPolicy(AzureRMModuleBaseExt):
+class AzureRMApiRelease(AzureRMModuleBaseExt):
     def __init__(self):
         self.module_arg_spec = dict(
             resource_group=dict(
@@ -188,24 +197,22 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                 disposition='apiId',
                 required=True
             ),
-            policy_id=dict(
+            release_id=dict(
                 type='str',
                 updatable=False,
-                disposition='policyId',
+                disposition='releaseId',
                 required=True
             ),
-            value=dict(
-                type='str',
-                disposition='/properties/*',
-                required=True
+            papi_id=dict(
+                type='raw',
+                disposition='/properties/apiId',
+                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
+                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
+                         '/{{ service_name }}/apis/{{ name }}')
             ),
-            format=dict(
+            notes=dict(
                 type='str',
-                disposition='/properties/*',
-                choices=['xml',
-                         'xml-link',
-                         'rawxml',
-                         'rawxml-link']
+                disposition='/properties/*'
             ),
             state=dict(
                 type='str',
@@ -217,7 +224,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
         self.resource_group = None
         self.service_name = None
         self.api_id = None
-        self.policy_id = None
+        self.release_id = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -232,9 +239,9 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
         self.header_parameters = {}
         self.header_parameters['Content-Type'] = 'application/json; charset=utf-8'
 
-        super(AzureRMApiPolicy, self).__init__(derived_arg_spec=self.module_arg_spec,
-                                               supports_check_mode=True,
-                                               supports_tags=True)
+        super(AzureRMApiRelease, self).__init__(derived_arg_spec=self.module_arg_spec,
+                                                supports_check_mode=True,
+                                                supports_tags=True)
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
@@ -263,25 +270,25 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                     '/{{ service_name }}' +
                     '/apis' +
                     '/{{ api_name }}' +
-                    '/policies' +
-                    '/{{ policy_name }}')
+                    '/releases' +
+                    '/{{ release_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
         self.url = self.url.replace('{{ api_name }}', self.api_id)
-        self.url = self.url.replace('{{ policy_name }}', self.policy_id)
+        self.url = self.url.replace('{{ release_name }}', self.release_id)
 
         old_response = self.get_resource()
 
         if not old_response:
-            self.log("ApiPolicy instance doesn't exist")
+            self.log("ApiRelease instance doesn't exist")
 
             if self.state == 'absent':
                 self.log("Old instance didn't exist")
             else:
                 self.to_do = Actions.Create
         else:
-            self.log('ApiPolicy instance already exists')
+            self.log('ApiRelease instance already exists')
 
             if self.state == 'absent':
                 self.to_do = Actions.Delete
@@ -295,7 +302,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                     self.to_do = Actions.Update
 
         if (self.to_do == Actions.Create) or (self.to_do == Actions.Update):
-            self.log('Need to Create / Update the ApiPolicy instance')
+            self.log('Need to Create / Update the ApiRelease instance')
 
             if self.check_mode:
                 self.results['changed'] = True
@@ -309,7 +316,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
             #     self.results['changed'] = old_response.__ne__(response)
             self.log('Creation / Update done')
         elif self.to_do == Actions.Delete:
-            self.log('ApiPolicy instance deleted')
+            self.log('ApiRelease instance deleted')
             self.results['changed'] = True
 
             if self.check_mode:
@@ -322,7 +329,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
             while self.get_resource():
                 time.sleep(20)
         else:
-            self.log('ApiPolicy instance unchanged')
+            self.log('ApiRelease instance unchanged')
             self.results['changed'] = False
             response = old_response
 
@@ -335,7 +342,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
         return self.results
 
     def create_update_resource(self):
-        # self.log('Creating / Updating the ApiPolicy instance {0}'.format(self.))
+        # self.log('Creating / Updating the ApiRelease instance {0}'.format(self.))
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -347,8 +354,8 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as exc:
-            self.log('Error attempting to create the ApiPolicy instance.')
-            self.fail('Error creating the ApiPolicy instance: {0}'.format(str(exc)))
+            self.log('Error attempting to create the ApiRelease instance.')
+            self.fail('Error creating the ApiRelease instance: {0}'.format(str(exc)))
 
         try:
             response = json.loads(response.text)
@@ -359,7 +366,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
         return response
 
     def delete_resource(self):
-        # self.log('Deleting the ApiPolicy instance {0}'.format(self.))
+        # self.log('Deleting the ApiRelease instance {0}'.format(self.))
         try:
             response = self.mgmt_client.query(self.url,
                                               'DELETE',
@@ -370,13 +377,13 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                                               600,
                                               30)
         except CloudError as e:
-            self.log('Error attempting to delete the ApiPolicy instance.')
-            self.fail('Error deleting the ApiPolicy instance: {0}'.format(str(e)))
+            self.log('Error attempting to delete the ApiRelease instance.')
+            self.fail('Error deleting the ApiRelease instance: {0}'.format(str(e)))
 
         return True
 
     def get_resource(self):
-        # self.log('Checking if the ApiPolicy instance {0} is present'.format(self.))
+        # self.log('Checking if the ApiRelease instance {0} is present'.format(self.))
         found = False
         try:
             response = self.mgmt_client.query(self.url,
@@ -389,9 +396,9 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
                                               30)
             found = True
             self.log("Response : {0}".format(response))
-            # self.log("ApiPolicy instance : {0} found".format(response.name))
+            # self.log("ApiRelease instance : {0} found".format(response.name))
         except CloudError as e:
-            self.log('Did not find the ApiPolicy instance.')
+            self.log('Did not find the ApiRelease instance.')
         if found is True:
             return response
 
@@ -399,7 +406,7 @@ class AzureRMApiPolicy(AzureRMModuleBaseExt):
 
 
 def main():
-    AzureRMApiPolicy()
+    AzureRMApiRelease()
 
 
 if __name__ == '__main__':

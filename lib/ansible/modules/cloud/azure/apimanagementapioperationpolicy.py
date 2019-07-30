@@ -84,10 +84,8 @@ EXAMPLES = '''
     service_name: myService
     api_id: myApi
     operation_id: myOperation
-    policy_id: myPolicy
-    value: >-
-      <policies> <inbound /> <backend>    <forward-request />  </backend> 
-      <outbound /></policies>
+    policy_id: policy
+    value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
     format: xml
 - name: ApiManagementDeleteApiOperationPolicy
   azure.rm.apimanagementapioperationpolicy:
