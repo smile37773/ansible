@@ -282,6 +282,8 @@ class AzureRMLogger(AzureRMModuleBaseExt):
             if hasattr(self, key):
                 # setattr(self, key, kwargs[key])
                 self.resource_group = kwargs['resource_group']
+                self.service_name = kwargs['service_name']
+                self.logger_id = kwargs['logger_id']
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
