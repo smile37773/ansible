@@ -59,17 +59,14 @@ options:
   title:
     description:
       - The issue title.
-    required: true
     type: str
   description:
     description:
       - Text describing the issue.
-    required: true
     type: str
   user_id:
     description:
       - A resource identifier for the user created the issue.
-    required: true
     type: str
 extends_documentation_fragment:
   - azure
@@ -238,18 +235,15 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
             ),
             title=dict(
                 type='str',
-                disposition='/properties/*',
-                required=True
+                disposition='/properties/*'
             ),
             description=dict(
                 type='str',
-                disposition='/properties/*',
-                required=True
+                disposition='/properties/*'
             ),
             user_id=dict(
                 type='raw',
-                disposition='/properties/userId',
-                required=True,
+                disposition='/properties/userId'
                 pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
                          '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
                          '/{{ service_name }}/users/{{ name }}')
@@ -290,6 +284,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
+        self.body['user_id'] = kwargs['user_id']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
