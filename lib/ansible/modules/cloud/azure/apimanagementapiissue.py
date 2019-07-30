@@ -222,7 +222,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
             ),
             pstate=dict(
                 type='str',
-                disposition='/properties/*',
+                disposition='/properties/state',
                 choices=['proposed',
                          'open',
                          'removed',
@@ -242,11 +242,8 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
                 disposition='/properties/*'
             ),
             user_id=dict(
-                type='raw',
-                disposition='/properties/userId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
-                         '/{{ service_name }}/users/{{ name }}')
+                type='str',
+                disposition='/properties/userId'
             ),
             state=dict(
                 type='str',
