@@ -178,7 +178,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
-    diagnostic_id: myDiagnostic
+    diagnostic_id: applicationinsights
     always_log: allErrors
     logger_id: /loggers/applicationinsights
     sampling:

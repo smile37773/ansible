@@ -86,7 +86,7 @@ EXAMPLES = '''
     api_id: myApi
     issue_id: myIssue
     created_date: '2018-02-01T22:21:20.467Z'
-    state: open
+    pstate: open
     title: New API issue
     description: New API issue description
     user_id: >-
@@ -99,7 +99,7 @@ EXAMPLES = '''
     service_name: myService
     api_id: myApi
     issue_id: myIssue
-    state: closed
+    pstate: closed
 - name: ApiManagementDeleteApiIssue
   azure.rm.apimanagementapiissue:
     resource_group: myResourceGroup
@@ -223,7 +223,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
                 type='datetime',
                 disposition='/properties/createdDate'
             ),
-            state=dict(
+            pstate=dict(
                 type='str',
                 disposition='/properties/*',
                 choices=['proposed',
@@ -232,7 +232,7 @@ class AzureRMApiIssue(AzureRMModuleBaseExt):
                          'resolved',
                          'closed']
             ),
-            api_id=dict(
+            papi_id=dict(
                 type='str',
                 disposition='/properties/apiId'
             ),
