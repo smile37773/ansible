@@ -279,14 +279,17 @@ class AzureRMLogger(AzureRMModuleBaseExt):
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
-            if hasattr(self, key):
+            # if hasattr(self, key):
                 # setattr(self, key, kwargs[key])
-                self.resource_group = kwargs['resource_group']
-                self.service_name = kwargs['service_name']
-                self.logger_id = kwargs['logger_id']
-            elif kwargs[key] is not None:
+            # elif kwargs[key] is not None:
+                # self.body[key] = kwargs[key]
+            if kwargs[key] is not None and not hasattr(self, key):
                 self.body[key] = kwargs[key]
 
+        self.resource_group = kwargs['resource_group']
+        self.service_name = kwargs['service_name']
+        self.logger_id = kwargs['logger_id']
+        self.body['credentials'] = kwargs['credentials']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
