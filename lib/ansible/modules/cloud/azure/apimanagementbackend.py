@@ -65,7 +65,7 @@ options:
       max_partition_resolution_retries:
         description:
           - Maximum number of retries while attempting resolve the partition.
-        type: number
+        type: str
       management_endpoints:
         description:
           - The cluster management endpoint.
@@ -197,7 +197,7 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     backend_id: myBackend
-    description: Service Fabric Test App 1
+    description: "Service Fabric Test App 1"
     service_fabric_cluster:
       client_certificatethumbprint: EBA029198AA3E76EF0D70482626E5BCF148594A6
       max_partition_resolution_retries: '5'
@@ -326,7 +326,7 @@ properties:
                   Maximum number of retries while attempting resolve the
                   partition.
               returned: always
-              type: number
+              type: str
               sample: null
             management_endpoints:
               description:
@@ -535,7 +535,7 @@ class AzureRMBackend(AzureRMModuleBaseExt):
                         required=True
                     ),
                     max_partition_resolution_retries=dict(
-                        type='number',
+                        type='str',
                         disposition='maxPartitionResolutionRetries'
                     ),
                     management_endpoints=dict(
