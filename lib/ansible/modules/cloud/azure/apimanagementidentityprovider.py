@@ -105,21 +105,21 @@ EXAMPLES = '''
   azure.rm.apimanagementidentityprovider:
     resource_group: myResourceGroup
     service_name: myService
-    name: myIdentityProvider
+    name: microsoft
     client_id: facebookid
     client_secret: facebookapplicationsecret
 - name: ApiManagementUpdateIdentityProvider
   azure.rm.apimanagementidentityprovider:
     resource_group: myResourceGroup
     service_name: myService
-    name: myIdentityProvider
+    name: microsoft
     client_id: updatedfacebookid
     client_secret: updatedfacebooksecret
 - name: ApiManagementDeleteIdentityProvider
   azure.rm.apimanagementidentityprovider:
     resource_group: myResourceGroup
     service_name: myService
-    name: myIdentityProvider
+    name: microsoft
     state: absent
 
 '''

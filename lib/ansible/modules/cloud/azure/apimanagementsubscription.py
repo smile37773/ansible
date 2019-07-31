@@ -371,7 +371,7 @@ class AzureRMSubscription(AzureRMModuleBaseExt):
                 type='str',
                 disposition='/properties/secondaryKey'
             ),
-            state=dict(
+            pstate=dict(
                 type='str',
                 disposition='/properties/*',
                 choices=['suspended',
