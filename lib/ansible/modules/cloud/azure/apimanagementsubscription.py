@@ -345,19 +345,12 @@ class AzureRMSubscription(AzureRMModuleBaseExt):
                 required=True
             ),
             owner_id=dict(
-                type='raw',
-                disposition='/properties/ownerId',
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
-                         '/{{ service_name }}/users/{{ name }}')
+                type='str',
+                disposition='/properties/ownerId'
             ),
             scope=dict(
-                type='raw',
-                disposition='/properties/*',
-                required=True,
-                pattern=('//subscriptions/{{ subscription_id }}/resourceGroups'
-                         '/{{ resource_group }}/providers/Microsoft.ApiManagement/service'
-                         '/{{ service_name }}/products/{{ name }}')
+                type='str',
+                disposition='/properties/*'
             ),
             display_name=dict(
                 type='str',
