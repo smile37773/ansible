@@ -673,6 +673,7 @@ class AzureRMBackend(AzureRMModuleBaseExt):
         self.resource_group = kwargs['resource_group']
         self.service_name = kwargs['service_name']
         self.backend_id = kwargs['backend_id']
+        self.body['url'] = kwargs['url']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
