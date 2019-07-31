@@ -570,10 +570,10 @@ class AzureRMBackend(AzureRMModuleBaseExt):
                         type='list'
                     ),
                     query=dict(
-                        type='unknown[DictionaryType {"$id":"1845","$type":"DictionaryType","valueType":{"$id":"1846","$type":"SequenceType","elementType":{"$id":"1847","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"1848","fixed":false,"raw":"String"},"deprecated":false},"name":{"$id":"1849","fixed":false},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"1850","fixed":false},"deprecated":false}]'
+                        type='str'
                     ),
                     header=dict(
-                        type='unknown[DictionaryType {"$id":"1855","$type":"DictionaryType","valueType":{"$id":"1856","$type":"SequenceType","elementType":{"$id":"1857","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"1858","fixed":false,"raw":"String"},"deprecated":false},"name":{"$id":"1859","fixed":false},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"1860","fixed":false},"deprecated":false}]'
+                        type='str'
                     ),
                     authorization=dict(
                         type='dict',
@@ -663,11 +663,16 @@ class AzureRMBackend(AzureRMModuleBaseExt):
 
     def exec_module(self, **kwargs):
         for key in list(self.module_arg_spec.keys()):
-            if hasattr(self, key):
-                setattr(self, key, kwargs[key])
-            elif kwargs[key] is not None:
+            # if hasattr(self, key):
+                # setattr(self, key, kwargs[key])
+            # elif kwargs[key] is not None:
+                # self.body[key] = kwargs[key]
+            if kwargs[key] is not None and not hasattr(self, key):
                 self.body[key] = kwargs[key]
 
+        self.resource_group = kwargs['resource_group']
+        self.service_name = kwargs['service_name']
+        self.backend_id = kwargs['backend_id']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
