@@ -157,13 +157,13 @@ options:
           - >-
             Flag indicating whether SSL certificate chain validation should be
             done when using self-signed certificates for this backend host.
-        type: boolean
+        type: bool
       validate_certificate_name:
         description:
           - >-
             Flag indicating whether SSL certificate name validation should be
             done when using self-signed certificates for this backend host.
-        type: boolean
+        type: bool
   url:
     description:
       - Runtime Url of the Backend.
@@ -378,17 +378,13 @@ properties:
           description:
             - Query Parameter description.
           returned: always
-          type: >-
-            unknown[DictionaryType
-            {"$id":"1845","$type":"DictionaryType","valueType":{"$id":"1846","$type":"SequenceType","elementType":{"$id":"1847","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"1848","fixed":false,"raw":"String"},"deprecated":false},"name":{"$id":"1849","fixed":false},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"1850","fixed":false},"deprecated":false}]
+          type: str
           sample: null
         header:
           description:
             - Header Parameter description.
           returned: always
-          type: >-
-            unknown[DictionaryType
-            {"$id":"1855","$type":"DictionaryType","valueType":{"$id":"1856","$type":"SequenceType","elementType":{"$id":"1857","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"1858","fixed":false,"raw":"String"},"deprecated":false},"name":{"$id":"1859","fixed":false},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"1860","fixed":false},"deprecated":false}]
+          type: str
           sample: null
         authorization:
           description:
@@ -450,7 +446,7 @@ properties:
               Flag indicating whether SSL certificate chain validation should be
               done when using self-signed certificates for this backend host.
           returned: always
-          type: boolean
+          type: bool
           sample: null
         validate_certificate_name:
           description:
@@ -458,7 +454,7 @@ properties:
               Flag indicating whether SSL certificate name validation should be
               done when using self-signed certificates for this backend host.
           returned: always
-          type: boolean
+          type: bool
           sample: null
     url:
       description:
@@ -570,10 +566,10 @@ class AzureRMBackend(AzureRMModuleBaseExt):
                         type='list'
                     ),
                     query=dict(
-                        type='str'
+                        type='dict'
                     ),
                     header=dict(
-                        type='str'
+                        type='dict'
                     ),
                     authorization=dict(
                         type='dict',
@@ -612,11 +608,11 @@ class AzureRMBackend(AzureRMModuleBaseExt):
                 disposition='/properties/*',
                 options=dict(
                     validate_certificate_chain=dict(
-                        type='boolean',
+                        type='bool',
                         disposition='validateCertificateChain'
                     ),
                     validate_certificate_name=dict(
-                        type='boolean',
+                        type='bool',
                         disposition='validateCertificateName'
                     )
                 )

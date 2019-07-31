@@ -91,10 +91,8 @@ EXAMPLES = '''
     resource_group: myResourceGroup
     service_name: myService
     certificate_id: myCertificate
-    data: >-
-      ****************Base 64 Encoded Certificate
-      *******************************
-    password: '****Certificate Password******'
+    data: bXlEYXRh
+    password: "PassWord123"
 - name: ApiManagementDeleteCertificate
   azure.rm.apimanagementcertificate:
     resource_group: myResourceGroup
