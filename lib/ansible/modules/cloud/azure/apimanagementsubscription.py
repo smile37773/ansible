@@ -425,6 +425,7 @@ class AzureRMSubscription(AzureRMModuleBaseExt):
             elif kwargs[key] is not None:
                 self.body[key] = kwargs[key]
 
+        self.body['scope'] = kwargs['scope']
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
         old_response = None
