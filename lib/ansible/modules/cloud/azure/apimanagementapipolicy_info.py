@@ -235,8 +235,7 @@ class AzureRMApiPolicyInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        self.fail("Result:{0}".format(results))
-        return self.format_item(results)
+        return self.format_item(results) if results else None
 
     def listbyapi(self):
         response = None
