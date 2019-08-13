@@ -665,8 +665,8 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
         'type': item['type'],
         'publisher_email': item['properties']['publisherEmail'],
         'publisher_name': item['properties']['publisherName']
-    }
-    return d
+      }
+      return d
 
 def main():
     AzureRMApiManagementServiceInfo()

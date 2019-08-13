@@ -452,8 +452,8 @@ class AzureRMApiInfo(AzureRMModuleBase):
         'type': item['type'],
         'protocols': item['properties']['protocols'],
         'display_name': item['properties']['displayName']
-    }
-    return d
+      }
+      return d
 
 
 def main():
