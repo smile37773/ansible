@@ -231,11 +231,11 @@ class AzureRMApiPolicyInfo(AzureRMModuleBase):
                                               600,
                                               30)
             results = json.loads(response.text)
-            self.fail("Result:{0}".format(results))
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
+        self.fail("Result:{0}".format(results))
         return self.format_item(results)
 
     def listbyapi(self):
