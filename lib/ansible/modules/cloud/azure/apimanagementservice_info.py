@@ -518,7 +518,11 @@ import json
 from ansible.module_utils.azure_rm_common import AzureRMModuleBase
 from ansible.module_utils.azure_rm_common_rest import GenericRestClient
 from copy import deepcopy
-from msrestazure.azure_exceptions import CloudError
+try:
+  from msrestazure.azure_exceptions import CloudError
+except ImportError:
+  # This is handled in azure_rm_common
+  pass
 
 
 class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
@@ -661,7 +665,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
         'id': item['id'],
         'name': item['name'],
         'type': item['type'],
-        'sku_name': item['sku']['name']
+        'sku_name': item['sku']['name'],
         'publisher_email': item['properties']['publisherEmail'],
         'publisher_name': item['properties']['publisherName']
       }
