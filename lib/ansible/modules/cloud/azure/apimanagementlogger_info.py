@@ -87,11 +87,11 @@ author:
 
 EXAMPLES = '''
 - name: ApiManagementListLoggers
-  azure.rm.apimanagementlogger.info:
+  azure.rm.apimanagementlogger_info:
     resource_group: myResourceGroup
     service_name: myService
 - name: ApiManagementGetLogger
-  azure.rm.apimanagementlogger.info:
+  azure.rm.apimanagementlogger_info:
     resource_group: myResourceGroup
     service_name: myService
     logger_id: myLogger
