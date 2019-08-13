@@ -223,20 +223,11 @@ author:
 
 EXAMPLES = '''
 - name: ApiManagementListApis
-  azure.rm.apimanagementapi.info:
-    resource_group: myResourceGroup
-    service_name: myService
-- name: ApiManagementListApisByTags
-  azure.rm.apimanagementapi.info:
+  azure.rm.apimanagementapi_info:
     resource_group: myResourceGroup
     service_name: myService
 - name: ApiManagementGetApiContract
-  azure.rm.apimanagementapi.info:
-    resource_group: myResourceGroup
-    service_name: myService
-    api_id: myApi
-- name: ApiManagementGetApiRevisionContract
-  azure.rm.apimanagementapi.info:
+  azure.rm.apimanagementapi_info:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
@@ -318,10 +309,6 @@ class AzureRMApiInfo(AzureRMModuleBase):
         self.expand_api_version_set = None
         self.include_not_tagged_apis = None
         self.api_id = None
-        self.id = None
-        self.name = None
-        self.type = None
-        self.properties = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
@@ -348,13 +335,13 @@ class AzureRMApiInfo(AzureRMModuleBase):
         if (self.resource_group is not None and
             self.service_name is not None and
             self.api_id is not None):
-            self.results['api'] = self.format_item(self.get())
+            self.results['api'] = self.get()
         elif (self.resource_group is not None and
               self.service_name is not None):
-            self.results['api'] = self.format_item(self.listbytags())
+            self.results['api'] = self.listbytags()
         elif (self.resource_group is not None and
               self.service_name is not None):
-            self.results['api'] = self.format_item(self.listbyservice())
+            self.results['api'] = self.listbyservice()
         return self.results
 
     def get(self):
@@ -390,7 +377,7 @@ class AzureRMApiInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+        return self.format_item(results)
 
     def listbytags(self):
         response = None
@@ -408,7 +395,6 @@ class AzureRMApiInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.name)
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -419,12 +405,12 @@ class AzureRMApiInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+            return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def listbyservice(self):
         response = None
@@ -442,7 +428,6 @@ class AzureRMApiInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.name)
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -453,15 +438,22 @@ class AzureRMApiInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+          return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def format_item(item):
-        return item
+      d = {
+        'id': item['id'],
+        'name': item['name'],
+        'type': item['type'],
+        'protocols': item['properties']['protocols'],
+        'display_name': item['properties']['displayName']
+    }
+    return d
 
 
 def main():
