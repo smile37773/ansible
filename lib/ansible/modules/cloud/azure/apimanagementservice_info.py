@@ -412,20 +412,12 @@ author:
 
 EXAMPLES = '''
 - name: ApiManagementListServiceBySubscription
-  azure.rm.apimanagementservice.info: {}
+  azure.rm.apimanagementservice_info:
 - name: ApiManagementListServiceBySubscriptionAndResourceGroup
-  azure.rm.apimanagementservice.info:
+  azure.rm.apimanagementservice_info:
     resource_group: myResourceGroup
 - name: ApiManagementServiceGetService
-  azure.rm.apimanagementservice.info:
-    resource_group: myResourceGroup
-    name: myService
-- name: ApiManagementServiceGetServiceHavingMsi
-  azure.rm.apimanagementservice.info:
-    resource_group: myResourceGroup
-    name: myService
-- name: ApiManagementServiceGetMultiRegionInternalVnet
-  azure.rm.apimanagementservice.info:
+  azure.rm.apimanagementservice_info:
     resource_group: myResourceGroup
     name: myService
 
@@ -467,9 +459,7 @@ api_management_service:
           description:
             - Resource tags.
           returned: always
-          type: >-
-            unknown[DictionaryType
-            {"$id":"2630","$type":"DictionaryType","valueType":{"$id":"2631","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"2632","fixed":false,"raw":"String"},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"2633","fixed":false},"deprecated":false}]
+          type: str
           sample: null
         properties:
           description:
@@ -546,16 +536,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
 
         self.resource_group = None
         self.name = None
-        self.id = None
-        self.name = None
-        self.type = None
-        self.tags = None
-        self.properties = None
-        self.sku = None
-        self.identity = None
-        self.location = None
-        self.etag = None
-
+       
         self.results = dict(changed=False)
         self.mgmt_client = None
         self.state = None
@@ -612,12 +593,12 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+        return self.format_item(results)
 
     def listbyresourcegroup(self):
         response = None
@@ -632,8 +613,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                     '/service')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
-        self.url = self.url.replace('{{ service_name }}', self.name)
-
+        
         try:
             response = self.mgmt_client.query(self.url,
                                               'GET',
@@ -643,12 +623,12 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+            return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def list(self):
         response = None
@@ -661,7 +641,6 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                     '/service')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
-        self.url = self.url.replace('{{ service_name }}', self.name)
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -672,16 +651,22 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return results
+            return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def format_item(item):
-        return item
-
+      d = {
+        'id': item['id'],
+        'name': item['name'],
+        'type': item['type'],
+        'publisher_email': item['properties']['publisherEmail'],
+        'publisher_name': item['properties']['publisherName']
+    }
+    return d
 
 def main():
     AzureRMApiManagementServiceInfo()
