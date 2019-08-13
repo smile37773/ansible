@@ -289,9 +289,7 @@ options:
         TLS_RSA_WITH_AES_128_CBC_SHA. For example,
         `Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TLS_RSA_WITH_AES_128_CBC_SHA256`:`false`.
         The default value is `true` for them.
-    type: >-
-      unknown[DictionaryType
-      {"$id":"2519","$type":"DictionaryType","valueType":{"$id":"2520","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"2521","fixed":false,"raw":"String"},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"2522","fixed":false},"deprecated":false}]
+    type: str
   certificates:
     description:
       - >-
@@ -663,6 +661,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
         'id': item['id'],
         'name': item['name'],
         'type': item['type'],
+        'sku_name': item['sku']['name']
         'publisher_email': item['properties']['publisherEmail'],
         'publisher_name': item['properties']['publisherName']
       }
