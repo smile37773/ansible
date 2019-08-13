@@ -410,7 +410,7 @@ class AzureRMApiInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-            return [self.format_item(x) for x in results['value']] if results['value'] else []
+        return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def listbyservice(self):
         response = None

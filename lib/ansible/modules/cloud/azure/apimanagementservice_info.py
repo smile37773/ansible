@@ -613,7 +613,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
                     '/service')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
-        
+
         try:
             response = self.mgmt_client.query(self.url,
                                               'GET',
@@ -628,7 +628,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-            return [self.format_item(x) for x in results['value']] if results['value'] else []
+        return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def list(self):
         response = None
@@ -656,7 +656,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-            return [self.format_item(x) for x in results['value']] if results['value'] else []
+        return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def format_item(item):
       d = {
