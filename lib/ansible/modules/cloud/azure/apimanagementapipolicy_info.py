@@ -73,12 +73,12 @@ author:
 
 EXAMPLES = '''
 - name: ApiManagementListApiPolicies
-  azure.rm.apimanagementapipolicy.info:
+  azure.rm.apimanagementapipolicy_info:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
 - name: ApiManagementGetApiPolicy
-  azure.rm.apimanagementapipolicy.info:
+  azure.rm.apimanagementapipolicy_info:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
@@ -231,6 +231,7 @@ class AzureRMApiPolicyInfo(AzureRMModuleBase):
                                               600,
                                               30)
             results = json.loads(response.text)
+            self.fail("Result:{0}".format(results))
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
