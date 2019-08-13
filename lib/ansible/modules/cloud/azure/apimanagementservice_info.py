@@ -660,16 +660,16 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
 
         return [self.format_item(x) for x in results['value']] if results['value'] else []
 
-    def format_item(item):
-      d = {
-        'id': item['id'],
-        'name': item['name'],
-        'type': item['type'],
-        'sku_name': item['sku']['name'],
-        'publisher_email': item['properties']['publisherEmail'],
-        'publisher_name': item['properties']['publisherName']
-      }
-      return d
+    def format_item(self, item):
+        d = {
+            'id': item['id'],
+            'name': item['name'],
+            'type': item['type'],
+            'sku_name': item['sku']['name'],
+            'publisher_email': item['properties']['publisherEmail'],
+            'publisher_name': item['properties']['publisherName']
+        }
+        return d
 
 def main():
     AzureRMApiManagementServiceInfo()

@@ -375,7 +375,7 @@ class AzureRMApiInfo(AzureRMModuleBase):
                                               self.status_code,
                                               600,
                                               30)
-            results['temp_item'] = json.loads(response.text)
+            results = json.loads(response.text)
             # self.log('Response : {0}'.format(response))
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
@@ -448,15 +448,15 @@ class AzureRMApiInfo(AzureRMModuleBase):
 
         return [self.format_item(x) for x in results['value']] if results['value'] else []
 
-    def format_item(item):
-      d = {
-        'id': item['id'],
-        'name': item['name'],
-        'type': item['type'],
-        'protocols': item['properties']['protocols'],
-        'display_name': item['properties']['displayName']
-      }
-      return d
+    def format_item(self, item):
+        d = {
+            'id': item['id'],
+            'name': item['name'],
+            'type': item['type'],
+            'protocols': item['properties']['protocols'],
+            'display_name': item['properties']['displayName']
+        }
+        return d
 
 
 def main():
