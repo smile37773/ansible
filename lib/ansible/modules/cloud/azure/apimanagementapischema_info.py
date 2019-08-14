@@ -283,7 +283,7 @@ class AzureRMApiSchemaInfo(AzureRMModuleBase):
             'name': item['name'],
             'type': item['type'],
             'content_type': item['properties']['contentType'],
-            'document:': item['properties']['document:']
+            'document': item['properties']['document']
         }
         return d
 
