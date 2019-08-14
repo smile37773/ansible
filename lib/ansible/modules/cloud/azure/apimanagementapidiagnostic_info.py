@@ -175,12 +175,12 @@ author:
 
 EXAMPLES = '''
 - name: ApiManagementListApiDiagnostics
-  azure.rm.apimanagementapidiagnostic.info:
+  azure.rm.apimanagementapidiagnostic_info:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
 - name: ApiManagementGetApiDiagnostic
-  azure.rm.apimanagementapidiagnostic.info:
+  azure.rm.apimanagementapidiagnostic_info:
     resource_group: myResourceGroup
     service_name: myService
     api_id: myApi
