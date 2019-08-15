@@ -14,12 +14,6 @@
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
         diagnostic_id: applicationinsights
-    - name: ApiManagementGetApiIssue
-      apimanagementapiissue_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        api_id: "{{ api_name }}"
-        issue_id: "{{ issue_name }}"
     - name: ApiManagementGetApiIssueAttachment
       apimanagementapiissueattachment_info:
         resource_group: "{{ resource_group }}"
