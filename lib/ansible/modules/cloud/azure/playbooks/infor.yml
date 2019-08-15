@@ -1,9 +1,0 @@
----
-- hosts: localhost
-  tasks:
-    - name: ApiManagementGetApiIssue
-      apimanagementapiissue_info:
-        resource_group: myResourceGroup
-        service_name: myService007
-        api_id: myApi
-        issue_id: myIssue
