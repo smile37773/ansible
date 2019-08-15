@@ -215,7 +215,7 @@ class AzureRMApiVersionSetInfo(AzureRMModuleBase):
                     '/{{ api_version_set_name }}')
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
-        self.url = self.url.replace('{{ service_name }}', self.service_id)
+        self.url = self.url.replace('{{ service_name }}', self.service_name)
         self.url = self.url.replace('{{ api_version_set_name }}', self.version_set_id)
 
         try:
