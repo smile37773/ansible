@@ -85,7 +85,7 @@
       apimanagementidentityprovider_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        name: myIdentityProvider
+        name: microsoft
     - name: ApiManagementGetLogger
       apimanagementlogger_info:
         resource_group: "{{ resource_group }}"
@@ -95,17 +95,17 @@
       apimanagementnotification_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        name: myNotification
+        name: RequestPublisherNotificationMessage
     - name: ApiManagementListNotificationRecipientEmails
       apimanagementnotificationrecipientemail_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        name: myNotification
+        name: RequestPublisherNotificationMessage
     - name: ApiManagementListNotificationRecipientUsers
       apimanagementnotificationrecipientuser_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        name: myNotification
+        name: RequestPublisherNotificationMessage
     - name: ApiManagementGetOpenIdConnectProvider
       apimanagementopenidconnectprovider_info:
         resource_group: "{{ resource_group }}"
