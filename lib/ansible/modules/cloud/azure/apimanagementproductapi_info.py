@@ -605,13 +605,14 @@ class AzureRMProductApiInfo(AzureRMModuleBase):
         except CloudError as e:
             self.log('Could not get info for @(Model.ModuleOperationNameUpper).')
 
-        return [self.format_item(x) for x in results['value']] if results['value'] else []
+        return self.format_item(results)
 
     def format_item(self, item):
         d = {
             'id': item['id'],
             'name': item['name'],
-            'type': item['type']
+            'type': item['type'],
+            'properties': item['properties']
         }
         return d
 
