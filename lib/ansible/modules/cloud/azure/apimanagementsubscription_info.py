@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 #!/usr/bin/python
 #
 # Copyright (c) 2019 Zim Kalinowski, (@zikalino)
