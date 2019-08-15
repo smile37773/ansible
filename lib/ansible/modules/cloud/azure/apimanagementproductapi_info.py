@@ -608,7 +608,7 @@ class AzureRMProductApiInfo(AzureRMModuleBase):
         return [self.format_item(x) for x in results['value']] if results['value'] else []
 
     def format_item(self, item):
-        self.fail('Response : {0}'.format(item))
+        self.fail('Response : {0}'.format(item['id']))
         d = {
             'id': item['id'],
             'name': item['name'],
