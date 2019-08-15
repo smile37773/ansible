@@ -612,7 +612,7 @@ class AzureRMProductApiInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'path': item['properties']['path']
+            'properties': item['properties']
         }
         return d
 

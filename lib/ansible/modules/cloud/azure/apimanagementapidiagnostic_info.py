@@ -376,8 +376,7 @@ class AzureRMApiDiagnosticInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'always_log': item['properties']['alwaysLog'],
-            'logger_id': item['properties']['loggerId']
+            'properties': item['properties']
         }
         return d
 

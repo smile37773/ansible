@@ -305,8 +305,7 @@ class AzureRMApiIssueAttachmentInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'title': item['properties']['title'],
-            'content_format': item['properties']['contentFormat']
+            'properties': item['properties']
         }
         return d
 

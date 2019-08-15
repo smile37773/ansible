@@ -573,13 +573,12 @@ class AzureRMApiOperationInfo(AzureRMModuleBase):
 
         return [self.format_item(x) for x in results['value']] if results['value'] else []
 
-      def format_item(self, item):
+    def format_item(self, item):
         d = {
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties'][' description'],
-            'display_name': item['properties']['displayName']
+            'properties': item['properties']
         }
         return d
 

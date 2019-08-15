@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateApi
-      azure.rm.apimanagementapi:
+      azure_rm_apimanagementapi:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
@@ -21,7 +19,7 @@
           - https
           - http
     - name: ApiManagementCreateApiSchema
-      azure.rm.apimanagementapischema:   
+      apimanagementapischema:   
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
@@ -30,7 +28,7 @@
         document:
           value: "<s:schema elementFormDefault=qualified>"
     - name: ApiManagementCreateApiTagDescription
-      azure.rm.apimanagementapitagdescription:                                                                                                                 
+      apimanagementapitagdescription:                                                                                                                 
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
@@ -41,7 +39,7 @@
         external_docs_url: 'http://some.url/additionaldoc'
         external_docs_description: Description of the external docs resource
     - name: ApiManagementCreateApiRelease                                                                                     
-      azure.rm.apimanagementapirelease:
+      apimanagementapirelease:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
@@ -49,7 +47,7 @@
         release_id: myRelease
         notes: yahooagain
     - name: ApiManagementCreateApiVersionSet
-      azure.rm.apimanagementapiversionset:                                                                                      
+      apimanagementapiversionset:                                                                                      
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         version_set_id: myApiVersionSet

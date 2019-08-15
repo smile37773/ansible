@@ -2,24 +2,22 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateProduct
-      azure.rm.apimanagementproduct:
+      apimanagementproduct:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         product_id: myProduct
         display_name: Test Template ProductName
     - name: ApiManagementCreateProductApi
-      azure.rm.apimanagementproductapi:
+      apimanagementproductapi:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         product_id: myProduct
         api_id: "{{ api_name }}"
         path: newapiPath
     - name: ApiManagementCreateProductPolicy
-      azure.rm.apimanagementproductpolicy:                                                                                      
+      apimanagementproductpolicy:                                                                                      
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         product_id: myProduct
@@ -27,7 +25,7 @@
         value: "<policies>\r\n  <inbound />\r\n  <backend>\r\n    <forward-request />\r\n  </backend>\r\n  <outbound />\r\n</policies>"
         format: xml
     - name: ApiManagementCreateProductGroup                                                                                   
-      azure.rm.apimanagementproductgroup:                                                                                       
+      apimanagementproductgroup:                                                                                       
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         product_id: myProduct

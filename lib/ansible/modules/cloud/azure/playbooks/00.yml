@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateService
-      azure.rm.apimanagementservice:
+      azure_rm_apimanagementservice:
         resource_group: "{{ resource_group }}"
         name: "{{ service_name }}"
         publisher_email: "{{ publisher_email }}"

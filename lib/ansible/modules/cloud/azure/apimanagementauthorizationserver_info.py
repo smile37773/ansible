@@ -351,8 +351,7 @@ class AzureRMAuthorizationServerInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'authorization_methods': item['properties']['authorizationMethods']
+            'properties': item['properties']
         }
         return d
 

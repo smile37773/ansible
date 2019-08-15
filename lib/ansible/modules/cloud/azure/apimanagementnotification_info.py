@@ -256,7 +256,7 @@ class AzureRMNotificationInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'title': item['properties']['title']
+            'properties': item['properties']
         }
         return d
 

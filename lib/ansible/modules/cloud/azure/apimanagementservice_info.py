@@ -666,8 +666,7 @@ class AzureRMApiManagementServiceInfo(AzureRMModuleBase):
             'name': item['name'],
             'type': item['type'],
             'sku_name': item['sku']['name'],
-            'publisher_email': item['properties']['publisherEmail'],
-            'publisher_name': item['properties']['publisherName']
+            'properties': item['properties']
         }
         return d
 

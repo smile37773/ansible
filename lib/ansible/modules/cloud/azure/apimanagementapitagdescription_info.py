@@ -283,8 +283,7 @@ class AzureRMApiTagDescriptionInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'external_docs_url': item['properties']['externalDocsUrl']
+            'properties': item['properties']
         }
         return d
 

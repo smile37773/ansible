@@ -2,23 +2,21 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateNotification 
-      azure.rm.apimanagementnotification:
+      apimanagementnotification:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         name: RequestPublisherNotificationMessage
         title: Subscription requests (requiring approval) 
     - name: ApiManagementCreateNotificationRecipientEmail
-      azure.rm.apimanagementnotificationrecipientemail:                                                                         
+      apimanagementnotificationrecipientemail:                                                                         
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         notification_name: RequestPublisherNotificationMessage
         email: myRecipientEmail
     - name: ApiManagementCreateNotificationRecipientUser
-      azure.rm.apimanagementnotificationrecipientuser:
+      apimanagementnotificationrecipientuser:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         notification_name: RequestPublisherNotificationMessage

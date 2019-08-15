@@ -376,8 +376,7 @@ class AzureRMBackendInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'protocol': item['properties']['protocol']
+            'properties': item['properties']
         }
         return d
 

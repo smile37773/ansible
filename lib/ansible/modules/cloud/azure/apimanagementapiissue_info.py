@@ -296,8 +296,7 @@ class AzureRMApiIssueInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'created_date': item['properties']['createdDate']
+            'properties': item['properties']
         }
         return d
 

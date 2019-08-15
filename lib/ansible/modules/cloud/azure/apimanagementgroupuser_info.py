@@ -411,8 +411,7 @@ class AzureRMGroupUserInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'first_name': item['properties']['firstName'],
-            'last_name': item['properties']['lastName']
+            'properties': item['properties']
         }
         return d
 

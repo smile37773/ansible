@@ -240,7 +240,7 @@ class AzureRMNotificationRecipientEmailInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'email': item['properties']['email']
+            'properties': item['properties']
         }
         return d
 

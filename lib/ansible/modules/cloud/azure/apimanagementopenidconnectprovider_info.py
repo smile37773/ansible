@@ -266,8 +266,7 @@ class AzureRMOpenIdConnectProviderInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'metadata_endpoint': item['properties']['metadataEndpoint'],
-            'display_name': item['properties']['displayName']
+            'properties': item['properties']
         }
         return d
 

@@ -277,8 +277,7 @@ class AzureRMApiReleaseInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'release_id': item['properties']['releaseId'],
-            'notes': item['properties']['notes']
+            'properties': item['properties']
         }
         return d
 

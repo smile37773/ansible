@@ -278,8 +278,7 @@ class AzureRMIdentityProviderInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'client_id': item['properties']['clientId'],
-            'client_secret': item['properties']['clientSecret']
+            'properties': item['properties']
         }
         return d
 

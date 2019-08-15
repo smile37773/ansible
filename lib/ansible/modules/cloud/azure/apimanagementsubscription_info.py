@@ -327,8 +327,7 @@ class AzureRMSubscriptionInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'owner_id': item['properties']['ownerId'],
-            'scope': item['properties']['scope']
+            'properties': item['properties']
         }
         return d
 

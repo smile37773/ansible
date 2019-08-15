@@ -267,7 +267,7 @@ class AzureRMGroupInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'display_name': item['properties']['displayName']
+            'properties': item['properties']
         }
         return d
 

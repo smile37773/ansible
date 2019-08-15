@@ -300,8 +300,7 @@ class AzureRMApiIssueCommentInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'text': item['properties']['text'],
-            'created_date': item['properties']['createdDate']
+            'properties': item['properties']
         }
         return d
 

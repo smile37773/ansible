@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateAILogger
-      azure.rm.apimanagementlogger:
+      apimanagementlogger:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         logger_id: myLogger
@@ -15,12 +13,12 @@
         credentials:
           instrumentationKey: 714c6d94-e036-4d07-8b0b-979f4b63bc65
     - name: ApiManagementCreateDiagnostic
-      azure.rm.apimanagementdiagnostic:                                                                                         
+      apimanagementdiagnostic:                                                                                         
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         diagnostic_id: applicationinsights
         always_log: allErrors
-        logger_id: /loggers/myLoggerId
+        logger_id: /loggers/myLogger
         sampling:
           sampling_type: fixed
           percentage: '50'
@@ -47,13 +45,13 @@
             body:
               bytes: '512'
     - name: ApiManagementCreateApiDiagnostic
-      azure.rm.apimanagementapidiagnostic:
+      apimanagementapidiagnostic:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
         diagnostic_id: applicationinsights
         always_log: allErrors
-        logger_id: /loggers/myLoggerId
+        logger_id: /loggers/myLogger
         sampling:
           sampling_type: fixed
           percentage: '50'

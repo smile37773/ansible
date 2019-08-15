@@ -272,8 +272,7 @@ class AzureRMApiVersionSetInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'display_name': item['properties']['displayName']
+            'properties': item['properties']
         }
         return d
 

@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateBackendServiceFabric
-      azure.rmapimanagementbackend:
+      apimanagementbackend:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         backend_id: myBackend

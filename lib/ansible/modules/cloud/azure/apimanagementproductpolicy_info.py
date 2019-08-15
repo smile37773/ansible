@@ -277,8 +277,7 @@ class AzureRMProductPolicyInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'value': item['properties']['value'],
-            'format': item['properties']['format']
+            'properties': item['properties']
         }
         return d
 

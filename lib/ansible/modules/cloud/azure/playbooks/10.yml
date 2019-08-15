@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateAuthorizationServer
-      azure.rm.apimanagementauthorizationserver:                                                                                \
+      apimanagementauthorizationserver:                                                                                \
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         authsid: myAuthorizationServer

@@ -2,11 +2,9 @@
 - hosts: localhost
   vars_files:
     - vars.yml
-  roles:
-    - ./modules 
   tasks:
     - name: ApiManagementCreateApiOperation
-      azure.rm.apimanagementapioperation:
+      apimanagementapioperation:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"
@@ -32,7 +30,7 @@
         method: POST
         url_template: /user1
     - name: ApiManagementCreateApiOperationPolicy
-      azure.rm.apimanagementapioperationpolicy:                                                                                
+      apimanagementapioperationpolicy:                                                                                
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         api_id: "{{ api_name }}"

@@ -274,9 +274,7 @@ class AzureRMLoggerInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'logger_type': item['properties']['loggerType'],
-            'description': item['properties']['description'],
-            'credentials': item['properties']['credentials']
+            'properties': item['properties']
         }
         return d
 

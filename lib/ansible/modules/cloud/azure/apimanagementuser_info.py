@@ -326,8 +326,7 @@ class AzureRMUserInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'email': item['properties']['email'],
-            'first_name': item['properties']['firstName']
+            'properties': item['properties']
         }
         return d
 

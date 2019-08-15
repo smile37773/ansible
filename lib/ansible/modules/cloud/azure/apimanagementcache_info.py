@@ -257,8 +257,7 @@ class AzureRMCacheInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'description': item['properties']['description'],
-            'connection_string': item['properties']['connectionString']
+            'properties': item['properties']
         }
         return d
 

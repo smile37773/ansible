@@ -453,8 +453,7 @@ class AzureRMApiInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'protocols': item['properties']['protocols'],
-            'display_name': item['properties']['displayName']
+            'properties': item['properties']
         }
         return d
 

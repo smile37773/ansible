@@ -263,8 +263,7 @@ class AzureRMCertificateInfo(AzureRMModuleBase):
             'id': item['id'],
             'name': item['name'],
             'type': item['type'],
-            'data': item['properties']['data'],
-            'password': item['properties']['password']
+            'properties': item['properties']
         }
         return d
 
