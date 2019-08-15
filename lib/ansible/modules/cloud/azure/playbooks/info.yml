@@ -146,11 +146,6 @@
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         sid: testsub
-    - name: ApiManagementGetTag
-      apimanagementtag_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        tag_id: myTag
     - name: ApiManagementGetUser
       apimanagementuser_info:
         resource_group: "{{ resource_group }}"

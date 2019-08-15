@@ -8,4 +8,4 @@
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         tag_id: myTag
-        display_name: tag1
+        display_name: tag2
