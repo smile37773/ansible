@@ -65,7 +65,7 @@
       apimanagementcache_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        cache_id: myCache
+        cache_id: westindia
     - name: ApiManagementGetCertificate
       apimanagementcertificate_info:
         resource_group: "{{ resource_group }}"
@@ -75,7 +75,7 @@
       apimanagementdiagnostic_info:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
-        diagnostic_id: myDiagnostic
+        diagnostic_id: applicationinsights
     - name: ApiManagementGetGroup
       apimanagementgroup_info:
         resource_group: "{{ resource_group }}"
