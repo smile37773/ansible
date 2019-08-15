@@ -1,11 +1,9 @@
 ---
 - hosts: localhost
-  vars_files:
-    - vars.yml
   tasks:
-    - name: ApiManagementListApiTagDescriptions
-      apimanagementapitagdescription_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        api_id: "{{ api_name }}"
-        tag_id: myTag
+    - name: ApiManagementGetApiIssue
+      apimanagementapiissue_info:
+        resource_group: myResourceGroup
+        service_name: myService007
+        api_id: myApi
+        issue_id: myIssue
