@@ -3,11 +3,6 @@
   vars_files:
     - vars.yml
   tasks:
-    - name: ApiManagementGetTag
-      apimanagementtag_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        tag_id: myTag
     - name: ApiManagementListApiTagDescriptions
       apimanagementapitagdescription_info:
         resource_group: "{{ resource_group }}"

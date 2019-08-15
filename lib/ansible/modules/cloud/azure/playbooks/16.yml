@@ -9,3 +9,14 @@
         service_name: "{{ service_name }}"
         tag_id: myTag
         display_name: tag2
+    - name: ApiManagementCreateApiTagDescription
+      apimanagementapitagdescription:                                                                                                                 
+        resource_group: "{{ resource_group }}"
+        service_name: "{{ service_name }}"
+        api_id: "{{ api_name }}"
+        tag_id: myTag
+        description: >-
+          Some description that will be displayed for operation's tag if the tag is
+          assigned to operation of the API
+        external_docs_url: 'http://some.url/additionaldoc'
+        external_docs_description: Description of the external docs resource

@@ -27,17 +27,6 @@
         content_type: application/vnd.ms-azure-apim.xsd+xml
         document:
           value: "<s:schema elementFormDefault=qualified>"
-    - name: ApiManagementCreateApiTagDescription
-      apimanagementapitagdescription:                                                                                                                 
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        api_id: "{{ api_name }}"
-        tag_id: tag1
-        description: >-
-          Some description that will be displayed for operation's tag if the tag is
-          assigned to operation of the API
-        external_docs_url: 'http://some.url/additionaldoc'
-        external_docs_description: Description of the external docs resource
     - name: ApiManagementCreateApiRelease                                                                                     
       apimanagementapirelease:
         resource_group: "{{ resource_group }}"
