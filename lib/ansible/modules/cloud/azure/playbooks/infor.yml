@@ -3,21 +3,6 @@
   vars_files:
     - vars.yml
   tasks:
-    - name: ApiManagementListProductApis
-      apimanagementproductapi_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        product_id: myProduct
-    - name: ApiManagementListProductGroups
-      apimanagementproductgroup_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        product_id: myProduct
-    - name: ApiManagementGetProperty
-      apimanagementproperty_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        prop_id: myProperty
     - name: ApiManagementServiceGetService
       apimanagementservice_info:
         resource_group: "{{ resource_group }}"
@@ -25,7 +10,7 @@
     - name: ApiManagementGetSubscription
       apimanagementsubscription_info:
         resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
+        name: "{{ service_name }}"
         sid: testsub
     - name: ApiManagementGetTag
       apimanagementtag_info:
