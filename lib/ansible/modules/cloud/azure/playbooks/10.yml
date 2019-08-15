@@ -4,7 +4,7 @@
     - vars.yml
   tasks:
     - name: ApiManagementCreateAuthorizationServer
-      apimanagementauthorizationserver:                                                                                \
+      apimanagementauthorizationserver:
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         authsid: myAuthorizationServer
