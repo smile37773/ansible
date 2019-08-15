@@ -300,7 +300,6 @@ class AzureRMTagInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.api_id)
         self.url = self.url.replace('{{ operation_name }}', self.operation_id)
         self.url = self.url.replace('{{ tag_name }}', self.tag_id)
 
@@ -378,8 +377,7 @@ class AzureRMTagInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.api_id)
-        self.url = self.url.replace('{{ operation_name }}', self.product_id)
+        self.url = self.url.replace('{{ product_name }}', self.product_id)
         self.url = self.url.replace('{{ tag_name }}', self.tag_id)
 
         try:
@@ -454,8 +452,7 @@ class AzureRMTagInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.api_id)
-        self.url = self.url.replace('{{ operation_name }}', self.product_id)
+        self.url = self.url.replace('{{ productn_name }}', self.product_id)
 
         try:
             response = self.mgmt_client.query(self.url,
@@ -526,7 +523,6 @@ class AzureRMTagInfo(AzureRMModuleBase):
         self.url = self.url.replace('{{ subscription_id }}', self.subscription_id)
         self.url = self.url.replace('{{ resource_group }}', self.resource_group)
         self.url = self.url.replace('{{ service_name }}', self.service_name)
-        self.url = self.url.replace('{{ api_name }}', self.api_id)
         self.url = self.url.replace('{{ tag_name }}', self.tag_id)
 
         try:
