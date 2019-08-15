@@ -51,6 +51,12 @@
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         version_set_id: myApiVersionSet
+    - name: ApiManagementGetApiOperation
+      apimanagementapioperation_info:
+        rresource_group: "{{ resource_group }}"
+        service_name: "{{ service_name }}"
+        api_id: "{{ api_name }}"
+        operation_id: myOperation
     - name: ApiManagementGetAuthorizationServer
       apimanagementauthorizationserver_info:
         resource_group: "{{ resource_group }}"

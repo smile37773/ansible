@@ -611,8 +611,7 @@ class AzureRMProductApiInfo(AzureRMModuleBase):
         d = {
             'id': item['id'],
             'name': item['name'],
-            'type': item['type'],
-            'properties': item['properties']
+            'type': item['type']
         }
         return d
 
