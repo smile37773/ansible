@@ -66,11 +66,6 @@
         resource_group: "{{ resource_group }}"
         service_name: "{{ service_name }}"
         cache_id: westindia
-    - name: ApiManagementGetCertificate
-      apimanagementcertificate_info:
-        resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
-        certificate_id: myCertificate
     - name: ApiManagementGetDiagnostic
       apimanagementdiagnostic_info:
         resource_group: "{{ resource_group }}"
