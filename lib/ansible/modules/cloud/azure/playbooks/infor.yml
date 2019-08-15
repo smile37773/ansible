@@ -6,11 +6,11 @@
     - name: ApiManagementServiceGetService
       apimanagementservice_info:
         resource_group: "{{ resource_group }}"
-        service_name: "{{ service_name }}"
+        name: "{{ service_name }}"
     - name: ApiManagementGetSubscription
       apimanagementsubscription_info:
         resource_group: "{{ resource_group }}"
-        name: "{{ service_name }}"
+        service_name: "{{ service_name }}"
         sid: testsub
     - name: ApiManagementGetTag
       apimanagementtag_info:
