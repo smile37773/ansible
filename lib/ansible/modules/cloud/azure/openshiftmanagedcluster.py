@@ -586,8 +586,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
             location=dict(
                 type='str',
                 updatable=False,
-                disposition='/',
-                required=True
+                disposition='/'
             ),
             plan=dict(
                 type='dict',
@@ -610,8 +609,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
             ),
             open_shift_version=dict(
                 type='str',
-                disposition='/properties/openShiftVersion',
-                required=True
+                disposition='/properties/openShiftVersion'
             ),
             network_profile=dict(
                 type='dict',
