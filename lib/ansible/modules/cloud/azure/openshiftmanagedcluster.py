@@ -714,7 +714,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                     ),
                     count=dict(
                         type='number',
-                        required=true
+                        required=True
                     ),
                     vm_size=dict(
                         type='str',
