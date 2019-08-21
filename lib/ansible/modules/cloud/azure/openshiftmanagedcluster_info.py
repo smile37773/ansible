@@ -219,12 +219,12 @@ author:
 
 EXAMPLES = '''
 - name: List Managed Clusters
-  azure.rm.openshiftmanagedcluster.info:
+  azure.rm.openshiftmanagedcluster_info:
 - name: Get Managed Clusters by Resource Group
-  azure.rm.openshiftmanagedcluster.info:
+  azure.rm.openshiftmanagedcluster_info:
     resource_group: myResourceGroup
 - name: Get OpenShift Managed Cluster
-  azure.rm.openshiftmanagedcluster.info:
+  azure.rm.openshiftmanagedcluster_info:
     resource_group: myResourceGroup
     name: myOpenShiftManagedCluster
 

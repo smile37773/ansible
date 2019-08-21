@@ -268,10 +268,10 @@ EXAMPLES = '''
         - name: Azure AD
           provider:
             kind: AADIdentityProvider
-            clientId: clientId
-            secret: secret
-            tenantId: tenantId
-            customerAdminGroupId: customerAdminGroupId
+            clientId: xxxxxxxx-xxxx-xxxx
+            secret: xxxxxxxx-xxxx-xxxx
+            tenantId: xxxxxxxx-xxxx-xxxx
+            customerAdminGroupId: xxxxxxxx-xxxx-xxxx
 - name: Delete OpenShift Managed Cluster
   azure.rm.openshiftmanagedcluster:
     resource_group: myResourceGroup
@@ -835,6 +835,8 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
 
         if 'location' not in self.body:
             self.body['location'] = resource_group.location
+
+        self.fail("Body: {0}".format(self.body))
 
         self.url = ('/subscriptions' +
                     '/{{ subscription_id }}' +
