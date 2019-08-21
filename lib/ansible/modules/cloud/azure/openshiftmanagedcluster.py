@@ -235,10 +235,7 @@ EXAMPLES = '''
   azure.rm.openshiftmanagedcluster:
     resource_group: myResourceGroup
     name: myOpenShiftManagedCluster
-    location: location1
-    tags:
-      tier: production
-      archv2: ''
+    location: eastus
     open_shift_version: v3.11
     network_profile:
       vnet_cidr: 10.0.0.0/8
@@ -835,8 +832,6 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
 
         if 'location' not in self.body:
             self.body['location'] = resource_group.location
-
-        self.fail("Body: {0}".format(self.body))
 
         self.url = ('/subscriptions' +
                     '/{{ subscription_id }}' +
