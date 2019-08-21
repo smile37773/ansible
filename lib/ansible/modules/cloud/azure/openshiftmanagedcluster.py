@@ -309,9 +309,7 @@ tags:
   description:
     - Resource tags
   returned: always
-  type: >-
-    unknown[DictionaryType
-    {"$id":"31","$type":"DictionaryType","valueType":{"$id":"32","$type":"PrimaryType","knownPrimaryType":"string","name":{"$id":"33","fixed":false,"raw":"String"},"deprecated":false},"supportsAdditionalProperties":false,"name":{"$id":"34","fixed":false},"deprecated":false}]
+  type: str
   sample: null
 plan:
   description:
@@ -580,19 +578,19 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                 type='str',
                 updatable=False,
                 disposition='resourceGroupName',
-                required=true
+                required=True
             ),
             name=dict(
                 type='str',
                 updatable=False,
                 disposition='resourceName',
-                required=true
+                required=True
             ),
             location=dict(
                 type='str',
                 updatable=False,
                 disposition='/',
-                required=true
+                required=True
             ),
             plan=dict(
                 type='dict',
@@ -616,7 +614,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
             open_shift_version=dict(
                 type='str',
                 disposition='/properties/openShiftVersion',
-                required=true
+                required=True
             ),
             network_profile=dict(
                 type='dict',
@@ -654,7 +652,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                     ),
                     count=dict(
                         type='number',
-                        required=true
+                        required=True
                     ),
                     vm_size=dict(
                         type='str',
@@ -692,7 +690,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                  'Standard_L8s',
                                  'Standard_L16s',
                                  'Standard_L32s'],
-                        required=true
+                        required=True
                     ),
                     subnet_cidr=dict(
                         type='str',
@@ -712,7 +710,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                 options=dict(
                     name=dict(
                         type='str',
-                        required=true
+                        required=True
                     ),
                     count=dict(
                         type='number',
@@ -754,7 +752,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                  'Standard_L8s',
                                  'Standard_L16s',
                                  'Standard_L32s'],
-                        required=true
+                        required=True
                     ),
                     subnet_cidr=dict(
                         type='str',
@@ -800,9 +798,6 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
 
         self.resource_group = None
         self.name = None
-        self.id = None
-        self.name = None
-        self.type = None
 
         self.results = dict(changed=False)
         self.mgmt_client = None
