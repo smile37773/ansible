@@ -114,7 +114,7 @@ options:
             Number of masters (VMs) to host docker containers. The default value
             is 3.
         required: true
-        type: number
+        type: int
       vm_size:
         description:
           - Size of agent VMs.
@@ -146,7 +146,7 @@ options:
         description:
           - Number of agents (VMs) to host docker containers.
         required: true
-        type: number
+        type: int
       vm_size:
         description:
           - Size of agent VMs.
@@ -456,7 +456,7 @@ properties:
               Number of masters (VMs) to host docker containers. The default
               value is 3.
           returned: always
-          type: number
+          type: int
           sample: null
         vm_size:
           description:
@@ -497,7 +497,7 @@ properties:
           description:
             - Number of agents (VMs) to host docker containers.
           returned: always
-          type: number
+          type: int
           sample: null
         vm_size:
           description:
@@ -651,7 +651,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                         type='str'
                     ),
                     count=dict(
-                        type='number',
+                        type='int',
                         required=True
                     ),
                     vm_size=dict(
@@ -713,7 +713,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                         required=True
                     ),
                     count=dict(
-                        type='number',
+                        type='int',
                         required=True
                     ),
                     vm_size=dict(
