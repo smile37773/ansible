@@ -923,6 +923,7 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                                               30)
         except CloudError as exc:
             self.log('Error attempting to create the OpenShiftManagedCluster instance.')
+            self.fail('Error creating the OpenShiftManagedCluster instance: {0}'.format(str(self.body)))
             self.fail('Error creating the OpenShiftManagedCluster instance: {0}'.format(str(exc)))
 
         try:
