@@ -820,10 +820,10 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
 
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
 
-        if not self.body['networkProfile']['peer_vnet_id']:
-            self.body['networkProfile'].pop('peer_vnet_id')
-        if not self.body['networkProfile']['vnet_id']:
-            self.body['networkProfile'].pop('vnet_id')
+        if not self.body['networkProfile']['peerVnetId']:
+            self.body['networkProfile'].pop('peerVnetId')
+        if not self.body['networkProfile']['vnetId']:
+            self.body['networkProfile'].pop('vnetId')
 
         old_response = None
         response = None
