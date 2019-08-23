@@ -394,19 +394,6 @@ properties:
             - CIDR for the OpenShift Vnet.
           returned: always
           type: str
-          sample: null
-        peer_vnet_id:
-          description:
-            - CIDR of the Vnet to peer.
-          returned: always
-          type: str
-          sample: null
-        vnet_id:
-          description:
-            - ID of the Vnet created for OSA cluster.
-          returned: always
-          type: str
-          sample: null
     router_profiles:
       description:
         - Configuration for OpenShift router(s).
@@ -618,14 +605,6 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                     vnet_cidr=dict(
                         type='str',
                         disposition='vnetCidr'
-                    ),
-                    peer_vnet_id=dict(
-                        type='str',
-                        disposition='peerVnetId'
-                    ),
-                    vnet_id=dict(
-                        type='str',
-                        disposition='vnetId'
                     )
                 )
             ),
@@ -819,11 +798,6 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
                 self.body[key] = kwargs[key]
 
         self.inflate_parameters(self.module_arg_spec, self.body, 0)
-
-        if not self.body['networkProfile']['peerVnetId']:
-            self.body['networkProfile'].pop('peerVnetId')
-        if not self.body['networkProfile']['vnetId']:
-            self.body['networkProfile'].pop('vnetId')
 
         old_response = None
         response = None
