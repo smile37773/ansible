@@ -883,7 +883,6 @@ class AzureRMOpenShiftManagedClusters(AzureRMModuleBaseExt):
            self.results["type"] = response["type"]
            self.results["location"] = response["location"]
            self.results["tags"] = response["tags"]
-           self.results["plan"] = response["plan"]
            self.results["properties"] = response["properties"]
 
         return self.results
